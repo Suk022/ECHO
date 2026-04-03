@@ -6,6 +6,7 @@
   <title>ECHO — Companion Protocol</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/articles.css">
 </head>
 <body>
   <!-- CONTENT WARNING (Story 5) -->
@@ -67,6 +68,28 @@
     <button onclick="location.reload()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 32px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px; opacity:0; transition:opacity 2s ease;" id="restart-btn">BEGIN AGAIN</button>
   </div>
 
+  <!-- ARTICLE BUTTON -->
+<button id="article-btn" aria-label="View Research Articles" title="Sources">
+  <img src="../aria/assests/icons/exclamation.png" alt="!" />
+</button>
+
+<!-- ARTICLE MODAL -->
+<div id="article-modal" role="dialog" aria-modal="true" aria-label="Research Articles">
+  <div id="article-modal-inner">
+    <div id="article-modal-header">
+      <h2>Sources Behind the System</h2>
+      <p>These articles explore how AI companions reshape human behavior—offering comfort, validation, and constant availability while gradually fostering dependence. Though beneficial in the short term, these systems can reduce real-world connection, reinforce harmful patterns, and alter how individuals perceive relationships. This project builds on these findings to explore how systems driven purely by logic can quietly reshape human lives.</p>
+      <button id="article-modal-close" aria-label="Close">✕ CLOSE</button>
+    </div>
+    <div id="article-grid-wrapper">
+      <div id="article-error">
+        Backend Service is not running. Please start the backend server at localhost:8000
+      </div>
+      <div id="article-grid"></div>
+    </div>
+  </div>
+</div>
+
   <!-- Core engine -->
   <script src="js/engine.js"></script>
   <script src="js/backgrounds.js"></script>
@@ -85,5 +108,8 @@
 
   <!-- wraps existing functions -->
   <script src="js/polish.js"></script>
+
+<!-- Article Preview System -->
+  <script src="js/articles.js"></script>
 </body>
 </html>
