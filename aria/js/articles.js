@@ -3,14 +3,16 @@
 const ARTICLES_API = 'http://localhost:8000/articles';
 let articlesCache = null;
 let fetchInProgress = false;
+const articleButton = document.getElementById('article-btn');
+const articleModal = document.getElementById('article-modal');
 
 // Button & Modal controls
-document.getElementById('article-btn').addEventListener('click', openArticleModal);
+articleButton.addEventListener('click', openArticleModal);
 document.getElementById('article-modal-close').addEventListener('click', closeArticleModal);
 
 // Close on backdrop click
-document.getElementById('article-modal').addEventListener('click', (e) => {
-  if (e.target === document.getElementById('article-modal')) closeArticleModal();
+articleModal.addEventListener('click', (e) => {
+  if (e.target === articleModal) closeArticleModal();
 });
 
 // Close on Escape key
@@ -19,9 +21,8 @@ document.addEventListener('keydown', (e) => {
 });
 
 function openArticleModal() {
-  const modal = document.getElementById('article-modal');
-  modal.classList.add('open');
-  modal.scrollTop = 0;
+  articleModal.classList.add('open');
+  articleModal.scrollTop = 0;
   document.body.style.overflow = 'hidden';
 
   if (articlesCache === null && !fetchInProgress) {
@@ -30,9 +31,17 @@ function openArticleModal() {
 }
 
 function closeArticleModal() {
-  document.getElementById('article-modal').classList.remove('open');
+  articleModal.classList.remove('open');
   document.body.style.overflow = '';
 }
+
+window.setArticleButtonVisible = function setArticleButtonVisible(visible) {
+  if (!articleButton) return;
+  articleButton.style.display = visible ? 'flex' : 'none';
+  if (!visible) {
+    closeArticleModal();
+  }
+};
 
 async function loadArticles() {
   fetchInProgress = true;
@@ -125,7 +134,7 @@ function renderArticles(articles) {
       <div style="grid-column:1/-1;text-align:center;padding:40px;
                   font-family:'Share Tech Mono',monospace;font-size:11px;
                   color:rgba(0,229,160,0.4);letter-spacing:2px;">
-        NO ARTICLES AVAILABLE - backend may still be processing
+      No articles, don't worry - backend is still processing, just refresh and come back
       </div>`;
     return;
   }

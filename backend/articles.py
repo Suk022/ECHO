@@ -22,26 +22,39 @@ from cache import get, set, is_cached, all_cached, cache_size
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# ── Hardcoded article URLs ──────────────────────────────────────────────────
+# Hardcoded article URLs
 SOURCE_URLS = [
     "https://www.scientificamerican.com/article/how-are-ai-chatbots-affecting-teen-development/",
     "https://news.stanford.edu/stories/2025/08/ai-companions-chatbots-teens-young-people-risks-dangers-study",
     "https://pmc.ncbi.nlm.nih.gov/articles/PMC12621494/",
     "https://www.pewresearch.org/internet/2026/02/24/how-teens-use-and-view-ai/",
-    "https://www.rand.org/pubs/commentary/2025/09/teens-are-using-chatbots-as-therapists-thats-alarming.html",
+    "https://www.theguardian.com/technology/2026/apr/01/unregulated-chatbots-are-putting-lives-at-risk",
     "https://divmagic.com/blog/the-impact-of-ai-chatbots-on-children-and-adolescents-a-comprehensive-analysis-xx4h0f",
     "https://youthendowmentfund.org.uk/news/one-in-four-teens-turn-to-ai-chatbots-for-mental-health-support-study-finds/",
     "https://time.com/7291048/ai-chatbot-therapy-kids/",
     "https://www.theguardian.com/technology/2025/dec/09/teenagers-ai-chatbots-mental-health-support",
-    "https://www.pewresearch.org/internet/2025/12/09/teens-social-media-and-ai-chatbots-2025/",
-    "https://www.apa.org/monitor/2026/01-02/trends-digital-ai-relationships-emotional-connection"
+    "https://www.sciencedirect.com/science/article/pii/S1071581921000197",
+    "https://psyche.co/ideas/why-chatbot-therapists-cant-offer-what-we-need"
 ]
+
+HARDCODED_TITLES = {
+    "https://news.stanford.edu/stories/2025/08/ai-companions-chatbots-teens-young-people-risks-dangers-study":
+        "Why AI companions and young people can make for a dangerous mix",
+    "https://www.sciencedirect.com/science/article/pii/S1071581921000197":
+        "My Chatbot Companion - a Study of Human-Chatbot Relationships",
+    "https://psyche.co/ideas/why-chatbot-therapists-cant-offer-what-we-need":
+        "Why chatbot therapists can't offer what we need",
+}
 
 # Track whether background scrape has been triggered
 _scrape_initiated = False
 
 
 def _safe_title(article: dict) -> str:
+    original_url = article.get("original_url")
+    if original_url in HARDCODED_TITLES:
+        return HARDCODED_TITLES[original_url]
+
     title = article.get("title")
     if title is not None:
         cleaned = " ".join(str(title).split()).strip()

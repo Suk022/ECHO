@@ -21,7 +21,7 @@ const BOOT_ACTIONS_DELAY_MS = 900;
   proceedButton.disabled = true;
   declineButton.disabled = true;
 
-  if (!hasSeenBootScreen) {
+  if (hasSeenBootScreen) {
     bootScreen.remove();
     return;
   }

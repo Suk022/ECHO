@@ -66,6 +66,8 @@ function startStory(story) {
   currentSceneIndex = 0;
   currentStory.choiceHistory = [];
 
+  window.setArticleButtonVisible?.(false);
+
   // Set story color palette
   document.documentElement.style.setProperty('--story-bg', story.palette.bg);
   document.documentElement.style.setProperty('--story-accent', story.palette.accent);

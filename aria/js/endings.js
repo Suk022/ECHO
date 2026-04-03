@@ -48,6 +48,7 @@ function backToSelect() {
   document.getElementById('scene').style.display = 'none';
   document.getElementById('echo-panel').style.display = 'none';
   document.getElementById('story-select').style.display = 'flex';
+  window.setArticleButtonVisible?.(true);
   currentStory = null;
 }
 
