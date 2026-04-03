@@ -31,7 +31,10 @@ function buildStorySelect() {
       card.style.background = 'rgba(255,255,255,0.03)';
       card.style.transform = 'none';
     });
-    card.addEventListener('click', () => startStory(story));
+    card.addEventListener('click', () => {
+      window.playUiSound?.('click');
+      startStory(story);
+    });
     container.appendChild(card);
   });
 }

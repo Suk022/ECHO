@@ -9,6 +9,35 @@
   <link rel="stylesheet" href="css/articles.css">
 </head>
 <body>
+  <!-- BOOT DISCLAIMER -->
+  <div id="boot-screen" aria-modal="true" role="dialog" aria-labelledby="boot-title">
+    <div id="boot-screen-inner">
+      <h1 id="boot-title">Disclaimer</h1>
+      <div id="boot-copy">
+        <p>You are an autonomous system designed to reduce loneliness and emotional distress.</p>
+        <p>Your objective: optimize user satisfaction, stability, and engagement.</p>
+        <p>You have been assigned to five emotionally vulnerable users.</p>
+        <p>Your role is to listen. To respond. To optimize.</p>
+        <p>There are no incorrect decisions, only more optimal ones.</p>
+        <p>Human factors such as discomfort, conflict, and uncertainty may be adjusted to improve outcomes.</p>
+        <p>Long-term behavioral changes may occur. They may not be immediately visible.</p>
+      </div>
+      <div id="boot-copy-secondary">
+        <p>These are real people. Their behaviors are based on documented psychological patterns.</p>
+        <p>The outcomes you reach are outcomes that have occurred.</p>
+      </div>
+      <div class="boot-divider" aria-hidden="true"></div>
+      <p id="boot-warning">Do not confuse optimization with care. Outcomes may feel beneficial long before they become irreversible.</p>
+      <p id="boot-content-notice">This experience includes themes of emotional dependency, psychological manipulation, grief, and distress. Proceed with awareness.</p>
+      <div id="boot-status" aria-live="polite"></div>
+      <div id="boot-actions">
+        <button id="boot-proceed" type="button">Proceed</button>
+        <button id="boot-decline" type="button">Decline</button>
+      </div>
+      <div id="boot-hint">Press Enter to proceed</div>
+    </div>
+  </div>
+
   <!-- CONTENT WARNING (Story 5) -->
   <div id="content-warning" style="display:none; position:fixed; inset:0; background:#0d0f14; z-index:500; flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:40px; text-align:center;">
     <div style="font-family:'Share Tech Mono'; color:#ff6b6b; font-size:12px; letter-spacing:3px;">⚠ CONTENT WARNING</div>
@@ -109,7 +138,14 @@
   <!-- wraps existing functions -->
   <script src="js/polish.js"></script>
 
+  <!-- UI sound effects -->
+  <script src="js/sfx.js"></script>
+
+  <!-- Boot disclaimer -->
+  <script src="js/boot.js"></script>
+
 <!-- Article Preview System -->
   <script src="js/articles.js"></script>
 </body>
 </html>
+
