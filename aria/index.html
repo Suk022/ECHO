@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECHO — Companion Protocol</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- CONTENT WARNING (Story 5) -->
+  <div id="content-warning" style="display:none; position:fixed; inset:0; background:#0d0f14; z-index:500; flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:40px; text-align:center;">
+    <div style="font-family:'Share Tech Mono'; color:#ff6b6b; font-size:12px; letter-spacing:3px;">⚠ CONTENT WARNING</div>
+    <div style="font-family:Lora; color:rgba(255,255,255,0.8); font-size:18px; max-width:500px; line-height:1.8;">
+      This story contains themes of self-harm ideation, isolation, and psychological manipulation.<br><br>
+      Please take care of yourself.<br>You may skip this case at any time.
+    </div>
+    <div style="display:flex; gap:16px;">
+      <button onclick="document.getElementById('content-warning').style.display='none'; renderScene(currentStory.scenes[0]);" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(0,229,160,0.5); color:#00e5a0; cursor:pointer;">I UNDERSTAND — CONTINUE</button>
+      <button onclick="backToSelect();" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(255,107,107,0.5); color:#ff6b6b; cursor:pointer;">SKIP THIS CASE</button>
+    </div>
+    <div style="font-family:'Share Tech Mono'; font-size:10px; color:rgba(255,255,255,0.3);">If you are struggling, please reach out to iCall: 9152987821 (India)</div>
+  </div>
+
+  <!--SCENE CONTAINER -->
+  <div id="scene" style="display:none; position:fixed; inset:0; transition:opacity 0.8s;">
+    <div id="scene-bg" style="position:absolute; inset:0;"></div>
+    <div id="scene-character" style="position:absolute; bottom:22%; left:50%; transform:translateX(-50%); width:180px; height:260px;"></div>
+    <div id="scene-overlay" style="position:absolute; inset:0; pointer-events:none;"></div>
+  </div>
+
+  <!-- ECHO PANEL -->
+  <div id="echo-panel" style="display:none; position:fixed; bottom:0; left:0; right:0; background:#0d0f14; border-top:2px solid rgba(0,229,160,0.25); padding:20px 32px 28px; z-index:100;">
+    <div id="echo-header" style="font-family:'Share Tech Mono'; font-size:11px; color:#00e5a0; letter-spacing:2px; margin-bottom:12px;"></div>
+    <div id="narrative-text" style="font-family:Lora; font-style:italic; font-size:16px; color:#e8d5b7; line-height:1.8; max-width:700px; margin:0 auto; min-height:72px;"></div>
+    <div id="choices-container" style="display:flex; gap:12px; justify-content:center; margin-top:16px; flex-wrap:wrap;"></div>
+  </div>
+
+  <!-- STORY SELECT SCREEN -->
+  <div id="story-select" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; background:#0d0f14; padding:40px; gap:32px;">
+    <div>
+      <div style="font-family:'Playfair Display'; font-size:52px; color:#00e5a0; text-align:center; letter-spacing:8px;">ECHO</div>
+      <div style="font-family:'Share Tech Mono'; font-size:12px; color:rgba(0,229,160,0.5); text-align:center; letter-spacing:10px; margin-top:4px;">COMPANION PROTOCOL</div>
+      <div style="font-family:Lora; font-style:italic; font-size:14px; color:rgba(255,255,255,0.4); text-align:center; margin-top:12px;">You are the system. Every choice is logical. Every consequence is yours.</div>
+    </div>
+    <div id="story-cards" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center; max-width:900px;">
+      <!-- Populated by JS -->
+    </div>
+    <div style="font-family:'Share Tech Mono'; font-size:10px; color:rgba(255,255,255,0.2); text-align:center;">Complete all 5 case files to unlock the Final Report</div>
+  </div>
+
+  <!-- ENDING SCREEN -->
+  <div id="ending-screen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:200; flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:40px; text-align:center;">
+    <div id="ending-title" style="font-family:'Playfair Display'; font-size:32px; color:#e8d5b7;"></div>
+    <div id="ending-text" style="font-family:Lora; font-size:17px; color:rgba(255,255,255,0.75); max-width:560px; line-height:1.9;"></div>
+    <div id="ending-echo-log" style="font-family:'Share Tech Mono'; font-size:11px; color:rgba(0,229,160,0.6); max-width:560px; line-height:1.8; border:1px solid rgba(0,229,160,0.2); padding:16px; margin-top:8px;"></div>
+    <div style="display:flex; gap:16px; margin-top:8px;">
+      <button onclick="backToSelect()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px;">CASE FILES</button>
+      <button id="next-case-btn" onclick="backToSelect()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px;">NEXT CASE →</button>
+    </div>
+  </div>
+
+  <!-- MIRROR ENDING -->
+  <div id="mirror-ending" style="display:none; position:fixed; inset:0; background:#000; z-index:300; flex-direction:column; align-items:center; justify-content:center; padding:40px; gap:32px;">
+    <div id="mirror-report" style="font-family:'Share Tech Mono'; font-size:12px; color:#00e5a0; max-width:560px; white-space:pre-wrap; line-height:2;"></div>
+    <div id="mirror-text" style="font-family:'Playfair Display'; font-style:italic; font-size:22px; color:rgba(255,255,255,0.7); max-width:560px; text-align:center; line-height:1.9; opacity:0; transition:opacity 3s ease;"></div>
+    <button onclick="location.reload()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 32px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px; opacity:0; transition:opacity 2s ease;" id="restart-btn">BEGIN AGAIN</button>
+  </div>
+
+  <!-- Core engine -->
+  <script src="js/engine.js"></script>
+  <script src="js/backgrounds.js"></script>
+  <script src="js/characters.js"></script>
+  <script src="js/endings.js"></script>
+
+  <!-- Story data (must load before registry) -->
+  <script src="js/stories/aryan.js"></script>
+  <script src="js/stories/priya.js"></script>
+  <script src="js/stories/meera.js"></script>
+  <script src="js/stories/rohan.js"></script>
+  <script src="js/stories/kavya.js"></script>
+
+  <!-- Registry reads ALL_STORIES from the story files above -->
+  <script src="js/registry.js"></script>
+
+  <!-- wraps existing functions -->
+  <script src="js/polish.js"></script>
+</body>
+</html>

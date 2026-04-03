@@ -1,0 +1,301 @@
+:root {
+  /* Story color palettes — switched per story */
+  --story-bg: #1a1a2e;
+  --story-accent: #4a90d9;
+  --story-warm: #e8d5b7;
+  --story-text: #f0ece4;
+
+  /* ECHO interface colors (always the same) */
+  --echo-bg: #0d0f14;
+  --echo-green: #00e5a0;
+  --echo-green-dim: rgba(0,229,160,0.4);
+  --echo-border: rgba(0,229,160,0.25);
+
+  /* Transition speed */
+  --fade: 0.8s;
+}
+
+body {
+  background: var(--story-bg);
+  overflow: hidden;
+  height: 100vh;
+  font-family: Lora;
+  margin: 0;
+  padding: 0;
+}
+
+#scene {
+  position: fixed;
+  inset: 0;
+  transition: opacity 0.8s;
+}
+
+#scene.fade-out {
+  opacity: 0;
+  transition: opacity 0.8s;
+}
+
+#scene-bg {
+  position: absolute;
+  inset: 0;
+  transition: background 1.5s ease;
+}
+
+#scene-character {
+  position: absolute;
+  bottom: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 280px;
+}
+
+#scene-character.character-sad {
+  /* Sad posture transforms */
+}
+
+#scene-character.character-neutral {
+  /* Neutral posture transforms */
+}
+
+#scene-character.character-happy {
+  /* Happy posture transforms */
+}
+
+#scene-character.character-withdrawn {
+  /* Withdrawn posture transforms */
+}
+
+#scene-character.character-distressed {
+  /* Distressed posture transforms */
+}
+
+#echo-panel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--echo-bg);
+  border-top: 2px solid var(--echo-border);
+  padding: 20px 32px 28px;
+  z-index: 100;
+}
+
+#echo-header {
+  font-family: 'Share Tech Mono';
+  font-size: 11px;
+  color: var(--echo-green);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+#narrative-text {
+  font-family: Lora;
+  font-style: italic;
+  font-size: 17px;
+  color: var(--story-warm);
+  line-height: 1.8;
+  max-width: 700px;
+  margin: 0 auto;
+  min-height: 80px;
+}
+
+#choices-container {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+.choice-btn {
+  background: transparent;
+  border: 1px solid var(--echo-border);
+  color: var(--echo-green);
+  font-family: 'Share Tech Mono';
+  font-size: 12px;
+  padding: 12px 20px;
+  max-width: 260px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.choice-btn:hover {
+  background: rgba(0,229,160,0.1);
+  border-color: var(--echo-green);
+  transform: translateY(-2px);
+}
+
+.choice-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.choice-label {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.choice-meta {
+  font-size: 10px;
+  color: var(--echo-green-dim);
+}
+
+#story-select {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: #0d0f14;
+  padding: 40px;
+  gap: 32px;
+}
+
+#story-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  max-width: 900px;
+}
+
+.story-card {
+  background: rgba(255,255,255,0.05);
+  border-left: 4px solid var(--echo-green);
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.3s;
+  max-width: 250px;
+}
+
+.story-card:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.08);
+}
+
+.story-card h3 {
+  font-family: 'Playfair Display';
+  color: var(--echo-green);
+  margin: 0 0 8px 0;
+}
+
+.story-card p {
+  font-family: Lora;
+  font-style: italic;
+  color: rgba(255,255,255,0.6);
+  margin: 0;
+  font-size: 14px;
+}
+
+#ending-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 40px;
+  text-align: center;
+}
+
+#ending-title {
+  font-family: 'Playfair Display';
+  font-size: 32px;
+  color: var(--story-warm);
+}
+
+#ending-text {
+  font-family: Lora;
+  font-size: 17px;
+  color: rgba(255,255,255,0.75);
+  max-width: 560px;
+  line-height: 1.9;
+}
+
+#ending-echo-log {
+  font-family: 'Share Tech Mono';
+  font-size: 11px;
+  color: rgba(0,229,160,0.6);
+  max-width: 560px;
+  line-height: 1.8;
+  border: 1px solid rgba(0,229,160,0.2);
+  padding: 16px;
+  margin-top: 8px;
+}
+
+#mirror-ending {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 300;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  gap: 32px;
+}
+
+#mirror-report {
+  font-family: 'Share Tech Mono';
+  font-size: 12px;
+  color: var(--echo-green);
+  max-width: 560px;
+  white-space: pre-wrap;
+  line-height: 2;
+}
+
+#mirror-text {
+  font-family: 'Playfair Display';
+  font-style: italic;
+  font-size: 22px;
+  color: rgba(255,255,255,0.7);
+  max-width: 560px;
+  text-align: center;
+  line-height: 1.9;
+  opacity: 0;
+  transition: opacity 3s ease;
+}
+
+/* Choice button meta text */
+.choice-btn { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+.choice-label { font-size: 13px; color: var(--echo-green); line-height: 1.5; }
+.choice-meta  { font-size: 10px; color: rgba(0,229,160,0.4); letter-spacing: 1px; }
+.choice-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+/* Narrative text fade-in */
+@keyframes narrative-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+#narrative-text { animation: narrative-in 0.6s ease forwards; }
+
+/* Scene fade */
+#scene { opacity: 1; transition: opacity 0.8s ease; }
+#scene.fade-out { opacity: 0; }
+
+/* ECHO panel slide up on start */
+@keyframes panel-slide {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+#echo-panel { animation: panel-slide 0.6s ease forwards; }
+
+/* Story card hover shadow */
+#story-cards > div:hover {
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* Vignette overlay on scene for atmosphere */
+#scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.35) 100%);
+  pointer-events: none;
+  z-index: 10;
+}
