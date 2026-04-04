@@ -1,6 +1,6 @@
 // Article Preview System (UPDATED UI + UX)
 
-const ARTICLES_API = 'http://localhost:8000/articles';
+const ARTICLES_API = 'https://echo-ko7o.onrender.com/articles';
 let articlesCache = null;
 let fetchInProgress = false;
 const articleButton = document.getElementById('article-btn');

@@ -18,7 +18,7 @@ app = FastAPI(
 # Allow requests from the local frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://echo-psi-eosin.vercel.app/"],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
