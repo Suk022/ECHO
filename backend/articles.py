@@ -29,9 +29,9 @@ SOURCE_URLS = [
     "https://pmc.ncbi.nlm.nih.gov/articles/PMC12621494/",
     "https://www.pewresearch.org/internet/2026/02/24/how-teens-use-and-view-ai/",
     "https://www.theguardian.com/technology/2026/apr/01/unregulated-chatbots-are-putting-lives-at-risk",
-    "https://divmagic.com/blog/the-impact-of-ai-chatbots-on-children-and-adolescents-a-comprehensive-analysis-xx4h0f",
-    "https://youthendowmentfund.org.uk/news/one-in-four-teens-turn-to-ai-chatbots-for-mental-health-support-study-finds/",
     "https://time.com/7291048/ai-chatbot-therapy-kids/",
+    "https://youthendowmentfund.org.uk/news/one-in-four-teens-turn-to-ai-chatbots-for-mental-health-support-study-finds/",
+    "https://divmagic.com/blog/the-impact-of-ai-chatbots-on-children-and-adolescents-a-comprehensive-analysis-xx4h0f",
     "https://www.theguardian.com/technology/2025/dec/09/teenagers-ai-chatbots-mental-health-support",
     "https://www.sciencedirect.com/science/article/pii/S1071581921000197",
     "https://psyche.co/ideas/why-chatbot-therapists-cant-offer-what-we-need"

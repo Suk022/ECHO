@@ -12,10 +12,10 @@ function renderScene(scene) {
 
   setTimeout(() => {
     // 2. Update background
-    renderBackground(scene.background);
+    renderBackground(scene.background, scene);
 
     // 3. Update character
-    renderCharacter(scene.character);
+    renderCharacter(scene.character, scene);
 
     // 4. Update ECHO panel
     document.getElementById('echo-header').textContent =
@@ -68,6 +68,7 @@ function startStory(story) {
   resetCaseAttributes();
 
   window.setArticleButtonVisible?.(false);
+  window.setMessageButtonVisible?.(false);
 
   // Set story color palette
   document.documentElement.style.setProperty('--story-bg', story.palette.bg);

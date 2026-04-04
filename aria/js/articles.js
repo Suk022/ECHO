@@ -172,7 +172,7 @@ function buildFeaturedArticle(article) {
         <div class="article-story-label">Jacqueline Nesi</div>
         <h3 class="article-feature-title">${escapeHtml(article.title)}</h3>
         <p class="article-feature-summary">
-          A key source informing how persistent AI companionship can influence attachment, validation, and withdrawal from offline relationships.
+          A key source informing how persistent AI companionship shapes attachment, validation, and withdrawal from offline relationships among teens.
         </p>
         <div class="article-feature-meta">${meta}</div>
       </div>

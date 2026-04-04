@@ -434,6 +434,11 @@ body.boot-active {
   gap: 32px;
 }
 
+#story-cards-wrap {
+  min-height: 352px;
+  justify-content: flex-start;
+}
+
 #story-cards {
   display: flex;
   flex-wrap: nowrap;
@@ -442,7 +447,7 @@ body.boot-active {
   align-items: flex-start;
   max-width: none;
   width: 100%;
-  min-height: 300px;
+  min-height: 320px;
 }
 
 #story-select-footer {
@@ -588,6 +593,7 @@ body.boot-active {
   color: rgba(255,255,255,0.75);
   max-width: 560px;
   line-height: 1.9;
+  white-space: pre-line;
 }
 
 #ending-echo-log {
@@ -599,6 +605,7 @@ body.boot-active {
   border: 1px solid rgba(0,229,160,0.2);
   padding: 16px;
   margin-top: 8px;
+  white-space: pre-line;
 }
 
 #mirror-ending {

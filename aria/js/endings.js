@@ -40,6 +40,9 @@ function triggerEnding(endingKey) {
   if (Object.keys(storyProgress).length >= 5) {
     document.getElementById('next-case-btn').textContent = 'VIEW FINAL REPORT';
     document.getElementById('next-case-btn').onclick = showMirrorEnding;
+  } else {
+    // Hide next case button if not all stories completed
+    document.getElementById('next-case-btn').style.display = 'none';
   }
 }
 
@@ -51,6 +54,7 @@ function backToSelect() {
   document.getElementById('echo-panel').style.display = 'none';
   document.getElementById('story-select').style.display = 'flex';
   window.setArticleButtonVisible?.(true);
+  window.setMessageButtonVisible?.(true);
   currentStory = null;
   window.updateAttributeHUD?.();
 }

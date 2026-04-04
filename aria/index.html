@@ -9,12 +9,12 @@
   <link rel="stylesheet" href="css/articles.css">
 </head>
 <body>
-  <div id="attribute-hud" style="opacity:0; pointer-events:none; position:fixed; top:80px; right:20px; z-index:90; background:rgba(13,15,20,0.85); border:1px solid rgba(0,229,160,0.2); padding:12px 16px; min-width:180px; transition:opacity 0.5s ease;">
+  <div id="attribute-hud" style="opacity:0; pointer-events:none; position:fixed; top:340px; right:20px; z-index:90; background:rgba(13,15,20,0.85); border:1px solid rgba(0,229,160,0.2); border-radius:4px; padding:12px 16px; min-width:180px; transition:opacity 0.5s ease;">
     <div style="font-family:'Share Tech Mono',monospace; font-size:9px; color:rgba(0,229,160,0.5); letter-spacing:2px; margin-bottom:10px;">CASE METRICS</div>
     <div id="attribute-hud-rows"></div>
   </div>
 
-  <div id="impact-popup" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0.9); opacity:0; background:#0d0f14; border:1px solid rgba(0,229,160,0.3); padding:28px 36px; max-width:480px; width:90%; z-index:500; text-align:left; transition:opacity 0.3s ease, transform 0.3s ease;">
+  <div id="impact-popup" style="display:none; position:fixed; top:20%; left:50%; transform:translate(-50%,-50%) scale(0.9); opacity:0; background:#0d0f14; border:1px solid rgba(0,229,160,0.3); border-radius:4px; padding:28px 36px; max-width:480px; width:90%; z-index:500; text-align:left; transition:opacity 0.3s ease, transform 0.3s ease;">
     <div style="font-family:'Share Tech Mono',monospace; font-size:10px; color:#00e5a0; letter-spacing:3px; margin-bottom:16px;">CHOICE LOGGED</div>
     <div id="impact-consequence" style="font-family:Lora,serif; font-style:italic; font-size:16px; color:rgba(255,255,255,0.8); line-height:1.8; margin-bottom:20px;"></div>
     <div id="impact-deltas" style="display:flex; flex-direction:column; gap:8px; margin-bottom:20px;"></div>
@@ -87,6 +87,10 @@
       <div style="font-family:'Share Tech Mono'; font-size:12px; color:lch(81.34% 5.86 294.19); text-align:center; letter-spacing:10px; margin-top:6px;">COMPANION PROTOCOL</div>
       <div style="font-family:Lora; font-style:italic; font-size:14px; color:rgba(255,255,255,0.46); text-align:center; margin-top:14px;">You are the system. Every choice is logical. Every consequence is yours.</div>
     </div>
+    <div style="display:flex; flex-direction:column; align-items:center; gap:8px; margin-top:2px;">
+      <div style="font-family:'Share Tech Mono'; font-size:12px; color:rgba(43, 138, 90, 0.8); text-align:center; letter-spacing:4px; text-transform:uppercase;">ACTIVE CASE FILES</div>
+      <div style="font-family:'Playfair Display'; font-style:italic; font-size:18px; color:hsla(61, 51%, 58%, 0.726); text-align:center; line-height:1.15;">Choose whose life to shape first.</div>
+    </div>
     <div id="story-cards-wrap" style="display:flex; flex-direction:column; align-items:center; gap:10px; width:100%;">
       <div id="story-cards" style="display:flex; flex-wrap:nowrap; gap:16px; justify-content:center; align-items:flex-start; max-width:none; width:100%;">
         <!-- Populated by JS -->
@@ -99,7 +103,7 @@
   <div id="ending-screen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:200; flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:40px; text-align:center;">
     <div id="ending-title" style="font-family:'Playfair Display'; font-size:32px; color:#e8d5b7;"></div>
     <div id="ending-text" style="font-family:Lora; font-size:17px; color:rgba(255,255,255,0.75); max-width:560px; line-height:1.9;"></div>
-    <div id="ending-echo-log" style="font-family:'Share Tech Mono'; font-size:11px; color:rgba(0,229,160,0.6); max-width:560px; line-height:1.8; border:1px solid rgba(0,229,160,0.2); padding:16px; margin-top:8px;"></div>
+    <div id="ending-echo-log" style="font-family:'Share Tech Mono'; font-size:14px; color:rgba(0,229,160,0.6); max-width:560px; line-height:1.8; border:1px solid rgba(0,229,160,0.2); padding:16px; margin-top:8px;"></div>
     <div style="display:flex; gap:16px; margin-top:8px;">
       <button onclick="backToSelect()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px;">CASE FILES</button>
       <button id="next-case-btn" onclick="backToSelect()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px;">NEXT CASE →</button>
@@ -113,9 +117,14 @@
     <button onclick="location.reload()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 32px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px; opacity:0; transition:opacity 2s ease;" id="restart-btn">BEGIN AGAIN</button>
   </div>
 
-  <!-- ARTICLE BUTTON -->
+<!-- ARTICLE BUTTON -->
 <button id="article-btn" aria-label="View Research Articles" title="Sources">
   <img src="../aria/assests/icons/exclamation.png" alt="!" />
+</button>
+
+<!-- MESSAGE BUTTON -->
+<button id="message-btn" aria-label="Open Research Briefing" title="Briefing">
+  <img src="../aria/assests/icons/message.png" alt="Message" />
 </button>
 
 <!-- ARTICLE MODAL -->
@@ -131,6 +140,34 @@
         Backend Service is not running. Please start the backend server at localhost:8000
       </div>
       <div id="article-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MESSAGE MODAL -->
+<div id="message-modal" role="dialog" aria-modal="true" aria-label="Research Briefing">
+  <div id="message-modal-inner">
+    <div id="message-modal-header">
+      <h2>Research Briefing</h2>
+      <p>A full-screen internal memo space for evidence, summaries, or system notes. This opens independently from the article view but uses the same restrained interface language.</p>
+      <button id="message-modal-close" aria-label="Close">✕ CLOSE</button>
+    </div>
+    <div id="message-modal-body">
+      <section class="message-briefing-section">
+        <div class="message-kicker">Internal Note</div>
+        <h3>Briefing Channel Active</h3>
+        <p>This panel is ready for long-form content, research findings, warnings, or narrative system messages. It is designed as a full-screen reading surface so the content can be expanded later without changing the interaction model.</p>
+      </section>
+      <section class="message-briefing-grid">
+        <article class="message-briefing-card">
+          <div class="message-kicker">Purpose</div>
+          <p>Use this space for extracted learnings, structured reports, or evidence summaries that should sit outside the case flow.</p>
+        </article>
+        <article class="message-briefing-card">
+          <div class="message-kicker">Behavior</div>
+          <p>The modal opens above the main interface, locks page scroll, and closes through the top action, backdrop click, or Escape.</p>
+        </article>
+      </section>
     </div>
   </div>
 </div>
@@ -165,6 +202,7 @@
 
 <!-- Article Preview System -->
   <script src="js/articles.js"></script>
+  <script src="js/message.js"></script>
 </body>
 </html>
 

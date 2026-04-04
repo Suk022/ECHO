@@ -1,120 +1,109 @@
 // Character renderer
 
-// Character configs
-function renderCharacter(charState) {
+function renderCharacter(charState, scene = {}) {
   const container = document.getElementById('scene-character');
   const { figure, state, name } = charState;
-  container.innerHTML = buildCharacterSVG(figure, state, name);
+  container.innerHTML = buildCharacterSVG(figure, state, name, scene);
 }
 
-// Build character SVG
-function buildCharacterSVG(figure, state, name) {
+function buildCharacterSVG(figure, state, name, scene = {}) {
   const configs = {
-    // Teen boy — Aryan
-    teen_boy: {
-      color: '#c49a72',
-      shirt: '#3a5a9a',
-      hair: '#1a1a1a',
-    },
-    // Student girl — Priya
-    student_girl: {
-      color: '#d4a882',
-      shirt: '#9a4a8a',
-      hair: '#2a1a0a',
-    },
-    // Middle-aged woman — Meera
-    adult_woman: {
-      color: '#c49070',
-      shirt: '#6a4a8a',
-      hair: '#3a2a1a',
-    },
-    // Professional man — Rohan
-    office_man: {
-      color: '#c49070',
-      shirt: '#2a3a5a',
-      hair: '#1a1a1a',
-    },
-    // Teen girl — Kavya
-    teen_girl: {
-      color: '#d4b090',
-      shirt: '#c44a8a',
-      hair: '#1a0a1a',
-    },
+    teen_boy: { color: '#c49a72', shirt: '#3a5a9a', hair: '#1a1a1a' },
+    student_girl: { color: '#d4a882', shirt: '#9a4a8a', hair: '#2a1a0a' },
+    adult_woman: { color: '#c49070', shirt: '#6a4a8a', hair: '#3a2a1a' },
+    office_man: { color: '#c49070', shirt: '#2a3a5a', hair: '#1a1a1a' },
+    teen_girl: { color: '#d4b090', shirt: '#c44a8a', hair: '#1a0a1a' },
+  };
+
+  const stateStyles = {
+    neutral:    { headTilt: 0,  shoulderDrop: 0,  bodyLean: 0,  opacity: 1,    eyeClose: false, bodyAnim: 'charSway 5.8s ease-in-out infinite', headAnim: 'charHeadNod 5.8s ease-in-out infinite', handAnim: 'none' },
+    happy:      { headTilt: -5, shoulderDrop: -4, bodyLean: -1, opacity: 1,    eyeClose: false, bodyAnim: 'charLift 3.6s ease-in-out infinite', headAnim: 'charHappyHead 3.6s ease-in-out infinite', handAnim: 'charOpenHands 3.6s ease-in-out infinite' },
+    sad:        { headTilt: 10, shoulderDrop: 8,  bodyLean: 3,  opacity: 0.92, eyeClose: false, bodyAnim: 'charSlowSink 6.4s ease-in-out infinite', headAnim: 'charSadHead 6.4s ease-in-out infinite', handAnim: 'none' },
+    withdrawn:  { headTilt: 15, shoulderDrop: 12, bodyLean: 5,  opacity: 0.82, eyeClose: false, bodyAnim: 'charStill 7.2s ease-in-out infinite', headAnim: 'charWithdrawnHead 7.2s ease-in-out infinite', handAnim: 'none' },
+    distressed: { headTilt: 18, shoulderDrop: 15, bodyLean: 8,  opacity: 0.76, eyeClose: false, bodyAnim: 'charTremor 1.25s ease-in-out infinite', headAnim: 'charDistressedHead 1.4s ease-in-out infinite', handAnim: 'charHandShake 1.25s ease-in-out infinite' },
+    content:    { headTilt: -3, shoulderDrop: -2, bodyLean: 0,  opacity: 1,    eyeClose: true,  bodyAnim: 'charFloat 4.8s ease-in-out infinite', headAnim: 'charHeadNod 4.8s ease-in-out infinite', handAnim: 'none' },
+    anxious:    { headTilt: 5,  shoulderDrop: 5,  bodyLean: -3, opacity: 0.92, eyeClose: false, bodyAnim: 'charAnxiousShift 2.8s ease-in-out infinite', headAnim: 'charAnxiousHead 2.8s ease-in-out infinite', handAnim: 'charHandFidget 2.8s ease-in-out infinite' },
   };
 
   const c = configs[figure] || configs.teen_boy;
-
-  // State modifies posture
-  const stateStyles = {
-    neutral:     { headTilt: 0,   shoulderDrop: 0,  bodyLean: 0,  opacity: 1,   eyeClose: false },
-    happy:       { headTilt: -5,  shoulderDrop: -5, bodyLean: 0,  opacity: 1,   eyeClose: false },
-    sad:         { headTilt: 10,  shoulderDrop: 8,  bodyLean: 3,  opacity: 0.9, eyeClose: false },
-    withdrawn:   { headTilt: 15,  shoulderDrop: 12, bodyLean: 5,  opacity: 0.8, eyeClose: false },
-    distressed:  { headTilt: 20,  shoulderDrop: 15, bodyLean: 8,  opacity: 0.75,eyeClose: false },
-    content:     { headTilt: -3,  shoulderDrop: -3, bodyLean: 0,  opacity: 1,   eyeClose: true  },
-    anxious:     { headTilt: 5,   shoulderDrop: 5,  bodyLean: -3, opacity: 0.9, eyeClose: false },
-  };
-
   const s = stateStyles[state] || stateStyles.neutral;
+  const isGrimScene = ['dark_room', 'bedroom_day_isolated'].includes(scene.background) || state === 'distressed' || state === 'withdrawn';
+  const shadowOpacity = isGrimScene ? 0.5 : 0.32;
 
   return `
-    <svg width="180" height="260" viewBox="0 0 180 260" xmlns="http://www.w3.org/2000/svg"
-         style="filter:drop-shadow(0 8px 24px rgba(0,0,0,0.4)); opacity:${s.opacity}">
-      <!-- Shadow -->
-      <ellipse cx="90" cy="255" rx="55" ry="10" fill="rgba(0,0,0,0.3)"/>
+    <svg width="210" height="286" viewBox="0 0 210 286" xmlns="http://www.w3.org/2000/svg" style="overflow:visible; filter:drop-shadow(0 16px 30px rgba(0,0,0,0.42)); opacity:${s.opacity}">
+      <style>
+        .body-group, .head-group, .arm-left, .arm-right {
+          transform-box: fill-box;
+          transform-origin: center;
+        }
+        .body-group { animation: ${s.bodyAnim}; }
+        .head-group { animation: ${s.headAnim}; }
+        .arm-left, .arm-right { animation: ${s.handAnim}; }
+        .blink-open { animation: blink 5.5s infinite; transform-origin: center; }
+        @keyframes blink { 0%, 46%, 52%, 100% { opacity: 1; } 48%, 50% { opacity: 0.1; } }
+        @keyframes charSway { 0%,100% { transform: translateY(0px) rotate(0deg);} 50% { transform: translateY(-2px) rotate(0.8deg);} }
+        @keyframes charLift { 0%,100% { transform: translateY(0px);} 50% { transform: translateY(-5px);} }
+        @keyframes charSlowSink { 0%,100% { transform: translateY(0px);} 50% { transform: translateY(3px);} }
+        @keyframes charStill { 0%,100% { transform: translateY(0px);} 50% { transform: translateY(1px);} }
+        @keyframes charFloat { 0%,100% { transform: translateY(0px);} 50% { transform: translateY(-3px);} }
+        @keyframes charAnxiousShift { 0%,100% { transform: translate(0px,0px);} 25% { transform: translate(-1px,1px);} 75% { transform: translate(1px,-1px);} }
+        @keyframes charTremor { 0%,100% { transform: translate(0px,0px);} 25% { transform: translate(-1.5px,0.5px);} 50% { transform: translate(1px,-1px);} 75% { transform: translate(-1px,1px);} }
+        @keyframes charHeadNod { 0%,100% { transform: rotate(0deg);} 50% { transform: rotate(1.2deg);} }
+        @keyframes charHappyHead { 0%,100% { transform: rotate(-1deg);} 50% { transform: rotate(2deg);} }
+        @keyframes charSadHead { 0%,100% { transform: rotate(0deg) translateY(0px);} 50% { transform: rotate(1.6deg) translateY(2px);} }
+        @keyframes charWithdrawnHead { 0%,100% { transform: rotate(0deg);} 50% { transform: rotate(0.8deg) translateY(2px);} }
+        @keyframes charDistressedHead { 0%,100% { transform: rotate(0deg);} 25% { transform: rotate(-1deg);} 75% { transform: rotate(1deg);} }
+        @keyframes charAnxiousHead { 0%,100% { transform: rotate(0deg);} 50% { transform: rotate(-1.4deg);} }
+        @keyframes charOpenHands { 0%,100% { transform: rotate(0deg);} 50% { transform: rotate(4deg);} }
+        @keyframes charHandFidget { 0%,100% { transform: rotate(0deg);} 25% { transform: rotate(-2deg);} 75% { transform: rotate(2deg);} }
+        @keyframes charHandShake { 0%,100% { transform: rotate(0deg);} 25% { transform: rotate(-3deg);} 50% { transform: rotate(2deg);} 75% { transform: rotate(-2deg);} }
+      </style>
 
-      <!-- Body group with lean -->
-      <g transform="translate(${s.bodyLean},0)">
-        <!-- Legs -->
-        <rect x="65"  y="185" width="22" height="65" rx="10" fill="${c.color}" opacity="0.9"/>
-        <rect x="93"  y="185" width="22" height="65" rx="10" fill="${c.color}" opacity="0.9"/>
-        <!-- Shoes -->
-        <ellipse cx="76"  cy="252" rx="16" ry="8" fill="#1a1a1a"/>
-        <ellipse cx="104" cy="252" rx="16" ry="8" fill="#1a1a1a"/>
+      <ellipse cx="105" cy="270" rx="60" ry="12" fill="rgba(0,0,0,${shadowOpacity})"/>
 
-        <!-- Torso -->
-        <rect x="52" y="105" width="76" height="90" rx="14" fill="${c.shirt}"/>
+      <g class="body-group" transform="translate(${s.bodyLean},0)">
+        <rect x="74" y="196" width="24" height="66" rx="11" fill="${c.color}" opacity="0.92"/>
+        <rect x="106" y="196" width="24" height="66" rx="11" fill="${c.color}" opacity="0.92"/>
+        <ellipse cx="86" cy="266" rx="18" ry="8" fill="#17171a"/>
+        <ellipse cx="118" cy="266" rx="18" ry="8" fill="#17171a"/>
 
-        <!-- Arms -->
-        <rect x="28" y="108" width="26" height="60" rx="12"
-              fill="${c.shirt}"
-              transform="rotate(${s.shoulderDrop * 1.5}, 41, 108)"/>
-        <rect x="126" y="108" width="26" height="60" rx="12"
-              fill="${c.shirt}"
-              transform="rotate(${-s.shoulderDrop * 1.5}, 139, 108)"/>
-        <!-- Hands -->
-        <circle cx="41"  cy="170" r="12" fill="${c.color}"/>
-        <circle cx="139" cy="170" r="12" fill="${c.color}"/>
+        <rect x="60" y="114" width="90" height="92" rx="16" fill="${c.shirt}"/>
+        <rect x="64" y="118" width="82" height="34" rx="10" fill="rgba(255,255,255,0.08)"/>
+
+        <g class="arm-left" transform="rotate(${s.shoulderDrop * 1.4}, 48, 118)">
+          <rect x="32" y="116" width="28" height="68" rx="12" fill="${c.shirt}"/>
+          <circle cx="46" cy="186" r="12" fill="${c.color}"/>
+        </g>
+        <g class="arm-right" transform="rotate(${-s.shoulderDrop * 1.4}, 162, 118)">
+          <rect x="150" y="116" width="28" height="68" rx="12" fill="${c.shirt}"/>
+          <circle cx="164" cy="186" r="12" fill="${c.color}"/>
+        </g>
       </g>
 
-      <!-- Head group with tilt -->
-      <g transform="rotate(${s.headTilt}, 90, 90)">
-        <!-- Neck -->
-        <rect x="80" y="88" width="20" height="22" rx="8" fill="${c.color}"/>
-        <!-- Head -->
-        <ellipse cx="90" cy="68" rx="42" ry="48" fill="${c.color}"/>
-        <!-- Hair -->
-        <ellipse cx="90" cy="30" rx="44" ry="24" fill="${c.hair}"/>
-        <rect x="46" y="20" width="88" height="35" rx="4" fill="${c.hair}"/>
-        <!-- Eyes -->
+      <g class="head-group" transform="rotate(${s.headTilt}, 105, 92)">
+        <rect x="94" y="92" width="22" height="24" rx="8" fill="${c.color}"/>
+        <ellipse cx="105" cy="72" rx="44" ry="50" fill="${c.color}"/>
+        <ellipse cx="105" cy="34" rx="46" ry="26" fill="${c.hair}"/>
+        <rect x="59" y="24" width="92" height="38" rx="6" fill="${c.hair}"/>
+
         ${s.eyeClose
-          ? `<path d="M72,65 Q78,60 84,65" stroke="#1a1a1a" stroke-width="2" fill="none"/>
-             <path d="M96,65 Q102,60 108,65" stroke="#1a1a1a" stroke-width="2" fill="none"/>`
-          : `<ellipse cx="78" cy="65" rx="8" ry="${state === 'distressed' ? 9 : 7}" fill="#1a1a1a"/>
-             <ellipse cx="102" cy="65" rx="8" ry="${state === 'distressed' ? 9 : 7}" fill="#1a1a1a"/>
-             <circle cx="81" cy="62" r="2.5" fill="white"/>
-             <circle cx="105" cy="62" r="2.5" fill="white"/>`
-        }
-        <!-- Mouth -->
+          ? `<path d="M85,71 Q91,66 97,71" stroke="#17171a" stroke-width="2.3" fill="none"/>
+             <path d="M113,71 Q119,66 125,71" stroke="#17171a" stroke-width="2.3" fill="none"/>`
+          : `<g class="blink-open">
+               <ellipse cx="91" cy="71" rx="8" ry="7" fill="#17171a"/>
+               <ellipse cx="119" cy="71" rx="8" ry="${state === 'distressed' ? 9 : 7}" fill="#17171a"/>
+               <circle cx="94" cy="68" r="2.2" fill="#ffffff"/>
+               <circle cx="122" cy="68" r="2.2" fill="#ffffff"/>
+             </g>`}
+
         ${state === 'happy' || state === 'content'
-          ? `<path d="M76,82 Q90,92 104,82" stroke="#1a1a1a" stroke-width="2" fill="none"/>` 
+          ? `<path d="M88,89 Q105,101 122,89" stroke="#17171a" stroke-width="2.3" fill="none"/>`
           : state === 'sad' || state === 'withdrawn' || state === 'distressed'
-            ? `<path d="M76,88 Q90,80 104,88" stroke="#1a1a1a" stroke-width="2" fill="none"/>` 
-            : `<line x1="78" y1="85" x2="102" y2="85" stroke="#1a1a1a" stroke-width="2"/>` 
-        }
+            ? `<path d="M88,94 Q105,84 122,94" stroke="#17171a" stroke-width="2.3" fill="none"/>`
+            : `<line x1="90" y1="91" x2="120" y2="91" stroke="#17171a" stroke-width="2.3"/>`}
       </g>
 
-      <!-- Name tag (small, below character) -->
-      <text x="90" y="275" font-family="Caveat" font-size="14" fill="rgba(255,255,255,0.5)" text-anchor="middle">${name}</text>
+      <text x="105" y="284" font-family="Caveat" font-size="15" fill="rgba(255,255,255,0.5)" text-anchor="middle">${name}</text>
     </svg>`;
 }
