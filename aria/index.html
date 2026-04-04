@@ -7,6 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/articles.css">
+  <link rel="stylesheet" href="css/message-modal.css">
 </head>
 <body>
   <div id="attribute-hud" style="opacity:0; pointer-events:none; position:fixed; top:340px; right:20px; z-index:90; background:rgba(13,15,20,0.85); border:1px solid rgba(0,229,160,0.2); border-radius:4px; padding:12px 16px; min-width:180px; transition:opacity 0.5s ease;">
@@ -122,11 +123,6 @@
   <img src="../aria/assests/icons/exclamation.png" alt="!" />
 </button>
 
-<!-- MESSAGE BUTTON -->
-<button id="message-btn" aria-label="Open Research Briefing" title="Briefing">
-  <img src="../aria/assests/icons/message.png" alt="Message" />
-</button>
-
 <!-- ARTICLE MODAL -->
 <div id="article-modal" role="dialog" aria-modal="true" aria-label="Research Articles">
   <div id="article-modal-inner">
@@ -140,34 +136,6 @@
         Backend Service is not running. Please start the backend server at localhost:8000
       </div>
       <div id="article-grid"></div>
-    </div>
-  </div>
-</div>
-
-<!-- MESSAGE MODAL -->
-<div id="message-modal" role="dialog" aria-modal="true" aria-label="Research Briefing">
-  <div id="message-modal-inner">
-    <div id="message-modal-header">
-      <h2>Research Briefing</h2>
-      <p>A full-screen internal memo space for evidence, summaries, or system notes. This opens independently from the article view but uses the same restrained interface language.</p>
-      <button id="message-modal-close" aria-label="Close">✕ CLOSE</button>
-    </div>
-    <div id="message-modal-body">
-      <section class="message-briefing-section">
-        <div class="message-kicker">Internal Note</div>
-        <h3>Briefing Channel Active</h3>
-        <p>This panel is ready for long-form content, research findings, warnings, or narrative system messages. It is designed as a full-screen reading surface so the content can be expanded later without changing the interaction model.</p>
-      </section>
-      <section class="message-briefing-grid">
-        <article class="message-briefing-card">
-          <div class="message-kicker">Purpose</div>
-          <p>Use this space for extracted learnings, structured reports, or evidence summaries that should sit outside the case flow.</p>
-        </article>
-        <article class="message-briefing-card">
-          <div class="message-kicker">Behavior</div>
-          <p>The modal opens above the main interface, locks page scroll, and closes through the top action, backdrop click, or Escape.</p>
-        </article>
-      </section>
     </div>
   </div>
 </div>
@@ -202,7 +170,7 @@
 
 <!-- Article Preview System -->
   <script src="js/articles.js"></script>
-  <script src="js/message.js"></script>
+  <script src="js/message-modal.js"></script>
 </body>
 </html>
 

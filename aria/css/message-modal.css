@@ -1,0 +1,358 @@
+#message-btn {
+  position: fixed;
+  right: 98px;
+  bottom: 28px;
+  z-index: 999;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  background: rgba(7, 8, 9, 0.92);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.34);
+  cursor: pointer;
+  transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+}
+
+#message-btn:hover {
+  transform: translateY(-2px) scale(1.08);
+  border-color: #d4ff00;
+  background: rgba(12, 13, 15, 0.98);
+}
+
+#message-btn img {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
+}
+
+#message-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: none;
+  overflow-y: auto;
+  padding: 44px 28px 56px;
+  opacity: 0;
+  transform: translateY(10px);
+  background:
+    radial-gradient(circle at top left, rgba(0, 229, 160, 0.08), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(217, 179, 108, 0.06), transparent 28%),
+    linear-gradient(180deg, #050607 0%, #090a0b 100%);
+  transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+#message-modal.open {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#message-modal-inner {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+#message-modal-header {
+  display: grid;
+  grid-template-columns: 124px minmax(0, 1fr);
+  gap: 26px;
+  align-items: start;
+  padding: 0 0 34px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  margin-bottom: 42px;
+}
+
+#message-modal-header h2 {
+  margin: 0;
+  max-width: 30ch;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  font-size: clamp(2.0rem, 4vw, 4.0em);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  text-transform: uppercase;
+  color: #f4efe7;
+}
+
+#message-modal-close {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 10001;
+  padding: 11px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(7, 8, 9, 0.92);
+  color: #f4efe7;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+  transition: border-color 220ms ease, color 220ms ease, background 220ms ease;
+}
+
+#message-modal-close:hover {
+  border-color:#d4ff00;
+  color: #d4ff00;
+  background: rgb(0, 0, 0);
+}
+
+.message-header-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: 8px;
+}
+
+.message-header-mark {
+  color: #d4ff00;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.message-header-kicker {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 231, 0.86);
+}
+
+#message-modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.message-kicker {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #d4ff00;
+}
+
+.message-briefing-section {
+  display: grid;
+  gap: 14px;
+  max-width: 78ch;
+}
+
+.message-briefing-section h3 {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: #f4efe7;
+}
+
+.message-briefing-section p,
+.message-briefing-card p {
+  margin: 0;
+  font-family: Lora, Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: rgba(244, 239, 231, 0.74);
+}
+
+.message-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.message-direct p {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.message-briefing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.message-briefing-card {
+  display: grid;
+  gap: 10px;
+  padding: 20px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.message-callout {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: #e8d5b7;
+  line-height: 1.8;
+  border-left: 3px solid #d4ff00;
+  padding-left: 20px;
+  margin: 24px 0 0;
+}
+
+.message-inline-highlight {
+  display: inline-block;
+  padding: 0.04em 0.26em 0.1em;
+  margin: 0 0.08em;
+  background: #f2e0b8;
+  color: #111111;
+  font-family: Arial, Helvetica, sans-serif;
+  font-weight: 800;
+  line-height: 1.15;
+  box-shadow: 4px 4px 0 #5062c8;
+}
+
+.message-helpline {
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  text-align: left;
+  gap: 14px 18px;
+  padding: 24px 24px 24px 22px;
+  background: transparent;
+  border: 1px solid rgba(212, 255, 0, 0.65);
+}
+
+.message-helpline::before {
+  content: '';
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(255,255,255,0.22), transparent 35%),
+    #d4ff00;
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.08);
+}
+
+.message-helpline .message-kicker,
+.message-helpline-name,
+.message-helpline-number,
+.message-helpline-meta {
+  grid-column: 2;
+}
+
+.message-helpline .message-kicker {
+  color: rgba(244, 239, 231, 0.72);
+  letter-spacing: 0.14em;
+}
+
+.message-helpline-name {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #f4efe7;
+  margin: 2px 0 2px;
+}
+
+.message-helpline-number {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 17px;
+  color: #f4efe7;
+  letter-spacing: 0.08em;
+  margin: 0;
+}
+
+.message-helpline-meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  color: rgba(244, 239, 231, 0.62);
+  margin: 0;
+}
+
+.message-closing {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.message-end-statement {
+  display: grid;
+  gap: 8px;
+  margin-top: 18px;
+  justify-items: center;
+}
+
+.message-end-line {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(1.45rem, 2.9vw, 2.4rem);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+  color: #f4efe7;
+}
+
+.message-end-line-outline {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(244, 239, 231, 0.68);
+}
+
+.message-end-line-accent {
+  color: #d4ff00;
+  font-style: italic;
+}
+
+.message-end-line-muted {
+  color: rgba(244, 239, 231, 0.74);
+}
+
+.message-sign {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(244, 239, 231, 0.54);
+  margin-top: 24px;
+}
+
+@media (max-width: 1100px) {
+  #message-modal-header {
+    grid-template-columns: 1fr;
+  }
+
+  .message-briefing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 760px) {
+  #message-modal {
+    padding: 22px 16px 28px;
+  }
+
+  #message-modal-header {
+    gap: 18px;
+    margin-bottom: 24px;
+    padding-bottom: 20px;
+  }
+
+  #message-modal-header h2 {
+    max-width: none;
+    font-size: clamp(2.35rem, 14vw, 3.6rem);
+  }
+
+  #message-btn {
+    right: 16px;
+    bottom: 92px;
+  }
+
+  .message-helpline {
+    grid-template-columns: 1fr;
+    text-align: center;
+    justify-items: center;
+  }
+
+  .message-helpline::before,
+  .message-helpline .message-kicker,
+  .message-helpline-name,
+  .message-helpline-number,
+  .message-helpline-meta {
+    grid-column: auto;
+  }
+}

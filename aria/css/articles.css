@@ -285,6 +285,145 @@
   color: rgba(0, 229, 160, 0.72);
 }
 
+.message-kicker {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(0, 229, 160, 0.72);
+}
+
+.message-briefing-section h3 {
+  margin: 0;
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.9rem, 4vw, 3rem);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--text-main);
+}
+
+.message-briefing-section p,
+.message-briefing-card p {
+  margin: 0;
+  font-family: Lora, Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.9;
+  color: var(--text-soft);
+}
+
+.message-briefing-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.message-briefing-card {
+  display: grid;
+  gap: 10px;
+  padding: 20px 22px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.025);
+}
+
+.message-divider {
+  width: 100%;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 20px 0;
+}
+
+.message-direct {
+  max-width: 1000ch;
+}
+
+.message-closing {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.message-callout {
+  font-weight: 700;
+  color: rgba(217, 179, 108, 0.9);
+  font-style: italic;
+}
+
+.message-sign {
+  text-align: right;
+  font-family: 'Caveat', cursive;
+  font-size: 1.1rem;
+  color: var(--text-main);
+  margin-top: 20px;
+}
+
+.message-helpline {
+  text-align: center;
+  padding: 24px;
+  background: rgba(217, 179, 108, 0.08);
+  border-radius: 6px;
+}
+
+.message-helpline-name {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.message-helpline-number {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.message-direct p {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.message-callout {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 18px;
+  color: #e8d5b7;
+  line-height: 1.8;
+  border-left: 3px solid rgba(0, 229, 160, 0.4);
+  padding-left: 20px;
+  margin: 24px 0;
+}
+
+.message-helpline {
+  text-align: center;
+}
+
+.message-helpline-name {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 16px;
+  color: #e8d5b7;
+  margin: 8px 0 4px;
+}
+
+.message-helpline-number {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 20px;
+  color: #00e5a0;
+  letter-spacing: 2px;
+  margin: 0;
+}
+
+.message-closing p {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.message-sign {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-style: italic;
+  font-size: 15px;
+  color: rgba(0, 229, 160, 0.6);
+  margin-top: 24px;
+}
+
 #article-grid-wrapper {
   width: 100%;
 }
