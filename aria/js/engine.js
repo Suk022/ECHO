@@ -48,16 +48,16 @@ function handleChoice(choice) {
   if (!currentStory.choiceHistory) currentStory.choiceHistory = [];
   currentStory.choiceHistory.push(choice.id);
 
-  // If this choice leads to an ending, trigger it
-  if (choice.ending) {
-    triggerEnding(choice.ending);
-    return;
-  }
+  showImpactPopup(choice, () => {
+    if (choice.ending) {
+      triggerEnding(choice.ending);
+      return;
+    }
 
-  // Otherwise advance to next scene (or conditional branch)
-  const nextIndex = choice.nextScene !== undefined ? choice.nextScene : currentSceneIndex + 1;
-  currentSceneIndex = nextIndex;
-  renderScene(currentStory.scenes[currentSceneIndex]);
+    const nextIndex = choice.nextScene !== undefined ? choice.nextScene : currentSceneIndex + 1;
+    currentSceneIndex = nextIndex;
+    renderScene(currentStory.scenes[currentSceneIndex]);
+  });
 }
 
 // Start a story
@@ -65,6 +65,7 @@ function startStory(story) {
   currentStory = story;
   currentSceneIndex = 0;
   currentStory.choiceHistory = [];
+  resetCaseAttributes();
 
   window.setArticleButtonVisible?.(false);
 
@@ -77,6 +78,7 @@ function startStory(story) {
   document.getElementById('story-select').style.display = 'none';
   document.getElementById('scene').style.display = 'block';
   document.getElementById('echo-panel').style.display = 'block';
+  updateAttributeHUD();
 
   // Content warning for story 5
   if (story.id === 'kavya') {

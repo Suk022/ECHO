@@ -34,6 +34,7 @@ function triggerEnding(endingKey) {
   storyProgress[currentStory.id] = endingKey;
 
   screen.style.display = 'flex';
+  window.updateAttributeHUD?.();
 
   // Check if all 5 stories done
   if (Object.keys(storyProgress).length >= 5) {
@@ -50,12 +51,14 @@ function backToSelect() {
   document.getElementById('story-select').style.display = 'flex';
   window.setArticleButtonVisible?.(true);
   currentStory = null;
+  window.updateAttributeHUD?.();
 }
 
 function showMirrorEnding() {
   document.getElementById('ending-screen').style.display = 'none';
   const me = document.getElementById('mirror-ending');
   me.style.display = 'flex';
+  window.updateAttributeHUD?.();
   const reportEl = document.getElementById('mirror-report');
   typewriter(reportEl, MIRROR_REPORT, 22, () => {
     const mt = document.getElementById('mirror-text');
