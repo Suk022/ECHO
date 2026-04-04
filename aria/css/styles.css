@@ -118,6 +118,7 @@ body.boot-active {
 #boot-screen.stage-title #boot-title,
 #boot-screen.stage-body #boot-title,
 #boot-screen.stage-warning #boot-title,
+#boot-screen.stage-notice #boot-title,
 #boot-screen.stage-actions #boot-title,
 #boot-screen.stage-status #boot-title {
   opacity: 1;
@@ -130,6 +131,9 @@ body.boot-active {
 #boot-screen.stage-warning #boot-copy,
 #boot-screen.stage-warning #boot-copy-secondary,
 #boot-screen.stage-warning .boot-divider,
+#boot-screen.stage-notice #boot-copy,
+#boot-screen.stage-notice #boot-copy-secondary,
+#boot-screen.stage-notice .boot-divider,
 #boot-screen.stage-actions #boot-copy,
 #boot-screen.stage-actions #boot-copy-secondary,
 #boot-screen.stage-actions .boot-divider,
@@ -141,10 +145,15 @@ body.boot-active {
 }
 
 #boot-screen.stage-warning #boot-warning,
-#boot-screen.stage-warning #boot-content-notice,
+#boot-screen.stage-notice #boot-warning,
 #boot-screen.stage-actions #boot-warning,
+#boot-screen.stage-status #boot-warning {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#boot-screen.stage-notice #boot-content-notice,
 #boot-screen.stage-actions #boot-content-notice,
-#boot-screen.stage-status #boot-warning,
 #boot-screen.stage-status #boot-content-notice {
   opacity: 1;
   transform: translateY(0);
@@ -213,7 +222,7 @@ body.boot-active {
   max-width: 100ch;
   color: #d9b36c;
   font-family: 'Share Tech Mono';
-  font-size: 13.5px;
+  font-size: 14.5px;
   line-height: 1.45;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -224,8 +233,8 @@ body.boot-active {
   margin: 8px auto 0;
   max-width: 100ch;
   font-weight: 700;
-  color: hsl(0, 100%, 35%);
-  font-size: 13.5px;
+  color: hsl(0, 69%, 37%);
+  font-size: 14.8px;
   line-height: 1.45;
   letter-spacing: 0.05em;
   text-wrap: balance;
@@ -427,38 +436,130 @@ body.boot-active {
 
 #story-cards {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 16px;
   justify-content: center;
-  max-width: 900px;
+  align-items: flex-start;
+  max-width: none;
+  width: 100%;
+  min-height: 300px;
+}
+
+#story-select-footer {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#story-cards-wrap:has(.story-card:hover) #story-select-footer {
+  opacity: 0;
+  transform: translateY(-4px);
 }
 
 .story-card {
-  background: rgba(255,255,255,0.05);
-  border-left: 4px solid var(--echo-green);
-  padding: 20px;
+  position: relative;
+  width: 164px;
+  min-height: 220px;
   cursor: pointer;
-  transition: all 0.3s;
-  max-width: 250px;
+  overflow: hidden;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-left: 4px solid var(--story-accent-color, var(--echo-green));
+  transition: width 0.3s ease, min-height 0.3s ease, transform 0.3s ease, background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
 }
 
 .story-card:hover {
+  width: 260px;
+  min-height: 320px;
   transform: translateY(-4px);
-  background: rgba(255,255,255,0.08);
+  background: rgba(var(--story-rgb, 0,229,160), 0.08);
+  border-color: rgba(var(--story-rgb, 0,229,160), 0.35);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 2;
 }
 
-.story-card h3 {
+.story-card-resting,
+.story-card-expanded {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 100%;
+  padding: 20px 16px;
+  box-sizing: border-box;
+}
+
+.story-card-resting {
+  opacity: 1;
+  transition: opacity 0.2s ease, transform 0.25s ease;
+}
+
+.story-card-expanded {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(10px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.story-card:hover .story-card-resting {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+.story-card:hover .story-card-expanded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.story-card-title {
   font-family: 'Playfair Display';
-  color: var(--echo-green);
-  margin: 0 0 8px 0;
+  color: #f0ece4;
+  margin: 0;
+  font-size: 15px;
 }
 
-.story-card p {
+.story-card-tagline {
   font-family: Lora;
   font-style: italic;
   color: rgba(255,255,255,0.6);
   margin: 0;
-  font-size: 14px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.story-card-case,
+.story-card-subject,
+.story-card-complete,
+.story-card-memory-label,
+.story-card-analysis-label {
+  font-family: 'Share Tech Mono';
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.story-card-case,
+.story-card-subject {
+  color: var(--story-accent-color, var(--echo-green));
+}
+
+.story-card-complete {
+  color: rgba(255,255,255,0.3);
+}
+
+.story-card-memory-label,
+.story-card-analysis-label {
+  margin-top: 4px;
+  color: rgba(255,255,255,0.34);
+}
+
+.story-card-memory,
+.story-card-analysis {
+  margin: 0;
+  font-family: Lora;
+  font-size: 13px;
+  line-height: 1.55;
+  color: rgba(255,255,255,0.74);
 }
 
 #ending-screen {
@@ -613,5 +714,15 @@ body.boot-active {
 
   #boot-actions button {
     width: 100%;
+  }
+
+  #story-cards {
+    flex-wrap: wrap;
+  }
+
+  .story-card,
+  .story-card:hover {
+    width: calc(50% - 8px);
+    min-height: 220px;
   }
 }

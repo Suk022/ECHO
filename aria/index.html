@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ECHO — Companion Protocol</title>
+  <title>ECHO</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora:ital,wght@0,400;0,600;1,400&family=Share+Tech+Mono&family=Caveat:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/articles.css">
@@ -31,7 +31,6 @@
       <div id="boot-copy">
         <p>You are an autonomous system designed to reduce loneliness and emotional distress.</p>
         <p>Your objective: optimize user satisfaction, stability, and engagement.</p>
-        <p>You have been assigned to five emotionally vulnerable users.</p>
         <p>Your role is to listen. To respond. To optimize.</p>
         <p>There are no incorrect decisions, only more optimal ones.</p>
         <p>Human factors such as discomfort, conflict, and uncertainty may be adjusted to improve outcomes.</p>
@@ -82,16 +81,18 @@
   </div>
 
   <!-- STORY SELECT SCREEN -->
-  <div id="story-select" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; background:#0d0f14; padding:40px; gap:32px;">
-    <div>
-      <div style="font-family:'Playfair Display'; font-size:52px; color:#00e5a0; text-align:center; letter-spacing:8px;">ECHO</div>
-      <div style="font-family:'Share Tech Mono'; font-size:12px; color:rgba(0,229,160,0.5); text-align:center; letter-spacing:10px; margin-top:4px;">COMPANION PROTOCOL</div>
-      <div style="font-family:Lora; font-style:italic; font-size:14px; color:rgba(255,255,255,0.4); text-align:center; margin-top:12px;">You are the system. Every choice is logical. Every consequence is yours.</div>
+  <div id="story-select" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; background:#0d0f14; padding:40px; gap:20px;">
+    <div style="margin-bottom:8px;">
+      <div style="font-family:'Playfair Display'; font-size:68px; font-weight:700; color:#f5f3ef; text-align:center; letter-spacing:10px; text-shadow:0 0 24px rgba(0,229,160,0.14);">ECHO</div>
+      <div style="font-family:'Share Tech Mono'; font-size:12px; color:hsl(100, 15%, 69%); text-align:center; letter-spacing:10px; margin-top:6px;">COMPANION PROTOCOL</div>
+      <div style="font-family:Lora; font-style:italic; font-size:14px; color:rgba(255,255,255,0.46); text-align:center; margin-top:14px;">You are the system. Every choice is logical. Every consequence is yours.</div>
     </div>
-    <div id="story-cards" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center; max-width:900px;">
-      <!-- Populated by JS -->
+    <div id="story-cards-wrap" style="display:flex; flex-direction:column; align-items:center; gap:10px; width:100%;">
+      <div id="story-cards" style="display:flex; flex-wrap:nowrap; gap:16px; justify-content:center; align-items:flex-start; max-width:none; width:100%;">
+        <!-- Populated by JS -->
+      </div>
+      <div id="story-select-footer" style="font-family:'Share Tech Mono'; font-size:10px; color:rgba(255,255,255,0.24); text-align:center;">Complete all 5 case files to unlock the Final Report</div>
     </div>
-    <div style="font-family:'Share Tech Mono'; font-size:10px; color:rgba(255,255,255,0.2); text-align:center;">Complete all 5 case files to unlock the Final Report</div>
   </div>
 
   <!-- ENDING SCREEN -->

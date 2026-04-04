@@ -45,6 +45,7 @@ function triggerEnding(endingKey) {
 
 // Back to story select
 function backToSelect() {
+  document.getElementById('content-warning').style.display = 'none';
   document.getElementById('ending-screen').style.display = 'none';
   document.getElementById('scene').style.display = 'none';
   document.getElementById('echo-panel').style.display = 'none';
