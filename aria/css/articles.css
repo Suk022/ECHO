@@ -65,7 +65,7 @@
 }
 
 #article-modal-inner {
-  width: min(1280px, 100%);
+  width: min(1300px, 100%);
   margin: 0 auto;
 }
 
@@ -146,7 +146,7 @@
 
 .article-lead-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(280px, 0.92fr);
+  grid-template-columns: minmax(0, 1.7fr) minmax(280px, .96fr);
   gap: 28px;
   align-items: stretch;
 }
@@ -165,7 +165,7 @@
 .article-feature-copy {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
   min-width: 0;
 }
 
@@ -184,7 +184,7 @@
 }
 
 .article-story-label {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
   color: var(--accent);
 }
 
