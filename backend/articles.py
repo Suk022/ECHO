@@ -5,9 +5,7 @@ Stores hardcoded list of source URLs.
 On first GET /articles request, scrapes all URLs concurrently and caches results.
 Subsequent requests return cached data instantly.
 
-Design decision: lazy initialization (scrape on first request, not on startup)
-so server starts fast. A background task fires scrape immediately
-on first request and returns cached data from then on.
+Design decision: lazy initialization so server starts fast.
 """
 
 import asyncio
@@ -70,8 +68,7 @@ def _safe_title(article: dict) -> str:
 
 
 async def _scrape_all() -> None:
-    """
-    Fetch metadata for all SOURCE_URLS concurrently.
+    """Fetch metadata for all SOURCE_URLS concurrently.
     Already-cached URLs are skipped.
     Failed URLs return None and are skipped silently.
     """
@@ -82,7 +79,6 @@ async def _scrape_all() -> None:
 
     logger.info(f"Scraping {len(urls_to_fetch)} URLs concurrently...")
 
-    # Run all fetches in parallel — each has its own timeout internally
     tasks = [fetch_metadata(url) for url in urls_to_fetch]
     results = await asyncio.gather(*tasks, return_exceptions=True)
 
@@ -104,23 +100,20 @@ async def _scrape_all() -> None:
 
 @router.get("/articles", summary="Get article preview cards")
 async def get_articles():
-    """
-    Returns a list of article preview objects.
+    """Return a list of article preview objects.
 
-    First call: triggers background scrape, returns whatever is cached so far
-    (may be empty or partial on cold start — frontend handles empty state).
+    First call: triggers background scrape, returns whatever is cached so far.
+    May be empty or partial on cold start — frontend handles empty state.
 
-    Subsequent calls: returns full cached results instantly.
+    Subsequent calls: return full cached results instantly.
     """
     global _scrape_initiated
 
     if not _scrape_initiated:
         _scrape_initiated = True
-        # Fire scrape in background — don't block response
         asyncio.create_task(_scrape_all())
 
     cached = all_cached()
-
     for article in cached:
         article["title"] = _safe_title(article)
 
@@ -135,16 +128,11 @@ async def get_articles():
 
 @router.get("/articles/refresh", summary="Force re-scrape all URLs")
 async def refresh_articles():
-    """
-    Clears scrape-initiated flag and triggers a fresh scrape.
+    """Clears scrape-initiated flag and triggers a fresh scrape.
     Useful during development.
     """
     global _scrape_initiated
     _scrape_initiated = False
 
-    # Clear cache by re-importing and resetting
-    import cache
-    cache._cache.clear()
-
     asyncio.create_task(_scrape_all())
-    return {"message": "Refresh triggered. Call GET /articles in a few seconds."}
+    return {"message": "Refresh triggered."}

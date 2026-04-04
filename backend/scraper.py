@@ -1,17 +1,15 @@
-"""
-Async metadata scraper.
+"""Async metadata scraper.
 
 Responsibilities:
-1. Follow redirect chains to resolve shortened URLs (share.google, bit.ly, etc.)
+1. Follow redirect chains to resolve shortened URLs
 2. Fetch final page HTML
-3. Extract OG tags (og:title, og:image) with fallbacks
+3. Extract OG tags with fallbacks
 4. Return structured metadata dict
 
 Design decisions:
-- Uses httpx.AsyncClient for async redirect following + HTML fetch in one client
-- Sets a realistic User-Agent to avoid 403s from news sites
-- Timeout of 12s per request so slow sites do not hang forever
-- Normalizes titles before caching so frontend never receives null titles
+- Uses httpx.AsyncClient for async requests
+- Sets realistic User-Agent to avoid 403s
+- Timeout of 12s per request
 """
 
 import logging
@@ -37,9 +35,7 @@ TIMEOUT = 12.0  # seconds
 
 
 async def fetch_metadata(original_url: str) -> Optional[dict]:
-    """
-    Resolve redirects, fetch page HTML, extract metadata.
-    Returns dict with keys: title, image, url.
+    """Resolve redirects, fetch page HTML, extract metadata.
     Returns None only for unrecoverable request failures.
     """
     try:
@@ -78,8 +74,7 @@ async def fetch_metadata(original_url: str) -> Optional[dict]:
 
 
 def _extract_metadata(html: str, final_url: str, original_url: str) -> dict:
-    """
-    Parse HTML and extract:
+    """Parse HTML and extract:
     1. og:title -> fallback to <title>
     2. og:image -> fallback to first <img> with src
     """
@@ -96,11 +91,7 @@ def _extract_metadata(html: str, final_url: str, original_url: str) -> dict:
     if og_image and og_image.get("content"):
         image = og_image["content"].strip()
     else:
-        tw_image = soup.find("meta", attrs={"name": "twitter:image"})
-        if tw_image and tw_image.get("content"):
-            image = tw_image["content"].strip()
-        else:
-            image = _find_first_image(soup, final_url)
+        image = _find_first_image(soup, final_url)
 
     return {
         "title": _safe_title(title, final_url),
@@ -111,31 +102,22 @@ def _extract_metadata(html: str, final_url: str, original_url: str) -> dict:
 
 
 def _find_first_image(soup: BeautifulSoup, base_url: str) -> Optional[str]:
-    """
-    Find first <img> tag with a meaningful src.
-    Skip tiny icons (width/height < 100 in attributes if present).
+    """Find first <img> tag with a meaningful src.
+    Skip tiny icons.
     """
     for img in soup.find_all("img", src=True):
         src = img["src"].strip()
         if not src or src.startswith("data:"):
             continue
 
-        w = img.get("width", "")
-        h = img.get("height", "")
-        try:
-            if int(w) < 100 or int(h) < 100:
-                continue
-        except (ValueError, TypeError):
-            pass
-
         if src.startswith("//"):
             src = "https:" + src
         elif src.startswith("/"):
             from urllib.parse import urlparse
-
             parsed = urlparse(base_url)
             src = f"{parsed.scheme}://{parsed.netloc}{src}"
         return src
+
     return None
 
 
@@ -152,7 +134,7 @@ def _fallback_record(original_url: str, final_url: str) -> dict:
 
 
 def _safe_title(title: Optional[str], final_url: str) -> str:
-    """Guarantee a non-empty string title for every article record."""
+    """Guarantee a non-empty string title."""
     if title is not None:
         cleaned = " ".join(str(title).split()).strip()
         if cleaned:
@@ -166,7 +148,6 @@ def _domain_from_url(url: str) -> str:
     """Extract readable domain name as a last-resort title."""
     try:
         from urllib.parse import urlparse
-
         return urlparse(url).netloc.replace("www.", "")
     except Exception:
         return url

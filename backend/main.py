@@ -1,5 +1,6 @@
 """
 ECHO Article Preview API
+
 Entry point for the FastAPI application.
 Mounts the articles router and configures CORS for local frontend access.
 """
@@ -14,11 +15,10 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# Allow requests from the local frontend (file:// and localhost)
-# In production, replace origins with your actual domain
+# Allow requests from the local frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # tighten in production
+    allow_origins=["*"],
     allow_methods=["GET"],
     allow_headers=["*"],
 )
