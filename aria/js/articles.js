@@ -1,5 +1,5 @@
 // Article Preview System (UPDATED UI + UX)
-const ARTICLES_API = `${import.meta.env.BACKEND_URL}/articles`;
+const ARTICLES_API = `${CONFIG.BACKEND_URL}/articles`;
 let articlesCache = null;
 let fetchInProgress = false;
 const articleButton = document.getElementById('article-btn');
