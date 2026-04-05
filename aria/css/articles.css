@@ -138,7 +138,8 @@
 
 #article-modal-header h2 {
   margin: 0;
-  max-width: 7ch;
+  align-items: start;
+  max-width: 8ch;
   font-family: 'Playfair Display', serif;
   font-size: clamp(2.8rem, 7vw, 5.2rem);
   line-height: 0.96;
@@ -448,15 +449,15 @@
 
 .article-lead-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.7fr) minmax(280px, .96fr);
+  grid-template-columns: minmax(0, 1.7fr) minmax(200px, .96fr);
   gap: 28px;
   align-items: stretch;
 }
 
 .article-feature {
-  min-height: 600px;
+  min-height: 300px;
   display: grid;
-  grid-template-columns: minmax(280px, 1.1fr) minmax(260px, 0.92fr);
+  grid-template-columns: minmax(240px, 1.1fr) minmax(220px, 0.92fr);
   gap: 28px;
   padding:0;
   border-bottom: 1px solid var(--panel-line);
@@ -610,10 +611,10 @@
 
 .article-strip {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
-  padding-top: 22px;
-  border-top: 1px solid var(--panel-line);
+  padding-top: 14px;
+  border:none;
 }
 
 .article-strip-item {
