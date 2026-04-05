@@ -7,11 +7,8 @@ Mounts the articles router and configures CORS for local frontend access.
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from articles import router as articles_router
-import os
-from dotenv import load_dotenv
 
-load_dotenv()
+from articles import router as articles_router
 
 app = FastAPI(
     title="ECHO Article Preview API",
@@ -19,17 +16,15 @@ app = FastAPI(
     version="1.0.0",
 )
 
-origins = [
-    "http://127.0.0.1:5500",
-    "http://127.0.0.1:8000",
-    os.getenv("FRONTEND_URL")
-]
-
-
-# Allow requests from deployed frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://127.0.0.1:8000",
+        "http://localhost:5500",
+        "http://localhost:8000",
+    ],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_methods=["GET"],
     allow_headers=["*"],
 )
