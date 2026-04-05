@@ -1,6 +1,6 @@
 const MESSAGE_MODAL_TEMPLATE = `
   <button id="message-btn" aria-label="Open personal note" title="A note from the creator">
-    <img src="../aria/assests/icons/message.png" alt="Message" />
+    <img src="./assests/icons/message.png" alt="Message" />
   </button>
 
   <div id="message-modal" role="dialog" aria-modal="true" aria-label="A note from the creator">
