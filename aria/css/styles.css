@@ -219,10 +219,10 @@ body.boot-active {
 #boot-warning {
   position: relative;
   margin: 0 auto;
-  max-width: 100ch;
+  max-width: 200ch;
   color: #d9b36c;
   font-family: 'Share Tech Mono';
-  font-size: 14.5px;
+  font-size: 19.5px;
   line-height: 1.45;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -231,10 +231,10 @@ body.boot-active {
 #boot-content-notice {
   position: relative;
   margin: 8px auto 0;
-  max-width: 100ch;
+  max-width: 100%;
   font-weight: 700;
-  color: hsl(0, 69%, 37%);
-  font-size: 14.8px;
+  color: hsl(0, 65%, 45%);
+  font-size: 15.8px;
   line-height: 1.45;
   letter-spacing: 0.05em;
   text-wrap: balance;
