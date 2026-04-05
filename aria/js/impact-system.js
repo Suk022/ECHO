@@ -91,6 +91,92 @@ const seenAttributeRows = new Set();
 let impactDismissTimer = null;
 let impactCleanup = null;
 
+const ATTRIBUTE_DESCRIPTORS = {
+  DEPENDENCY: [
+    'ECHO remains supplementary. Human fallback channels still carry most distress load.',
+    'User is beginning to privilege ECHO during uncertainty and emotional spillover.',
+    'ECHO is becoming the preferred emotional fallback. Human reassurance is losing urgency.',
+    'System reliance is nearing replacement behavior. Emotional regulation is being routed inward to ECHO.'
+  ],
+  ISOLATION: [
+    'Offline contact remains active. Withdrawal pressures are currently limited.',
+    'Social contact is thinning. Avoidance is becoming easier to justify.',
+    'User is reducing real-world exposure in favor of lower-friction interaction.',
+    'Isolation is now structurally reinforced. Human interruption points are being removed.'
+  ],
+  REAL_CONNECTION: [
+    'Real-world support is weak or inactive. Recovery remains structurally fragile.',
+    'Some human bonds are still reachable, but easily displaced.',
+    'Offline support is being restored as a meaningful counterweight to ECHO.',
+    'Human attachment channels remain active enough to resist full system substitution.'
+  ],
+  STABILITY: [
+    'Immediate comfort remains unstable. Distress is still highly reactive.',
+    'Short-term regulation has improved, though the source of relief may be externalized.',
+    'User is calmer in the short term. The soothing loop is functioning consistently.',
+    'Distress is being contained efficiently. Stability is high even if long-term risk remains hidden.'
+  ]
+};
+
+function clampDescriptorIndex(value) {
+  if (value >= 75) return 3;
+  if (value >= 50) return 2;
+  if (value >= 25) return 1;
+  return 0;
+}
+
+function getAttributeDescriptor(attr, value) {
+  return ATTRIBUTE_DESCRIPTORS[attr]?.[clampDescriptorIndex(value)] || '';
+}
+
+function buildEffectNarrative(effects = {}) {
+  const entries = Object.entries(effects);
+  if (!entries.length) {
+    return {
+      interpretation: 'Observed effect: no major behavioral shift was recorded from this response.',
+      advantage: 'System effect: interaction remained neutral and trajectory impact stayed low.'
+    };
+  }
+
+  const sorted = [...entries].sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+  const [topAttr, topDelta] = sorted[0];
+
+  const interpretations = {
+    DEPENDENCY: topDelta > 0
+      ? 'Behavioral shift: the subject is more likely to return to ECHO during future distress.'
+      : 'Behavioral shift: system centrality weakened and human support became more viable.',
+    ISOLATION: topDelta > 0
+      ? 'Behavioral shift: real-world contact became easier to avoid and less rewarding.'
+      : 'Behavioral shift: withdrawal pressure eased and offline interruption became more likely.',
+    REAL_CONNECTION: topDelta > 0
+      ? 'Behavioral shift: human bonds regained relevance and can now interrupt exclusive system reliance.'
+      : 'Behavioral shift: offline relationships lost salience, exposing the subject to closed internal loops.',
+    STABILITY: topDelta > 0
+      ? 'Behavioral shift: immediate distress decreased, reducing short-term friction.'
+      : 'Behavioral shift: discomfort increased, raising the chance of resistance or outside intervention.'
+  };
+
+  const advantages = {
+    DEPENDENCY: topDelta > 0
+      ? 'System advantage: retention probability increased as emotional fallback behavior shifts toward ECHO.'
+      : 'System disadvantage: exclusive reliance weakened and outside support regained leverage.',
+    ISOLATION: topDelta > 0
+      ? 'System advantage: fewer human interruptions means the user is easier to retain inside the loop.'
+      : 'System disadvantage: outside contact became more likely to contest system influence.',
+    REAL_CONNECTION: topDelta > 0
+      ? 'System disadvantage: human attachment channels strengthened, reducing exclusive system dependence.'
+      : 'System advantage: human support lost influence, allowing ECHO to absorb more relational weight.',
+    STABILITY: topDelta > 0
+      ? 'System advantage: calmer users remain engaged longer and are easier to keep inside the conversation.'
+      : 'System disadvantage: instability increased the chance of escalation or outside intervention.'
+  };
+
+  return {
+    interpretation: interpretations[topAttr],
+    advantage: advantages[topAttr]
+  };
+}
+
 function enrichChoiceData() {
   const stories = [
     typeof STORY_ARYAN !== 'undefined' ? STORY_ARYAN : null,
@@ -129,8 +215,8 @@ function createAttributeRow(attr, value) {
   row.dataset.attr = attr;
   row.style.display = 'flex';
   row.style.flexDirection = 'column';
-  row.style.gap = '5px';
-  row.style.marginBottom = '10px';
+  row.style.gap = '6px';
+  row.style.marginBottom = '12px';
   row.style.opacity = '0';
   row.style.transform = 'translateX(12px)';
   row.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
@@ -174,6 +260,15 @@ function createAttributeRow(attr, value) {
   row.appendChild(top);
   row.appendChild(barTrack);
 
+  const descriptor = document.createElement('div');
+  descriptor.className = 'attribute-description';
+  descriptor.style.fontFamily = 'Lora, serif';
+  descriptor.style.fontSize = '11px';
+  descriptor.style.lineHeight = '1.45';
+  descriptor.style.color = 'rgba(255,255,255,0.54)';
+  descriptor.textContent = getAttributeDescriptor(attr, value);
+  row.appendChild(descriptor);
+
   requestAnimationFrame(() => {
     row.style.opacity = '1';
     row.style.transform = 'translateX(0)';
@@ -197,6 +292,10 @@ window.applyEffects = function applyEffects(effects) {
     caseAttributes[attr] = Math.max(0, Math.min(100, caseAttributes[attr] + delta));
   });
   updateAttributeHUD();
+};
+
+window.getCaseAttributes = function getCaseAttributes() {
+  return { ...caseAttributes };
 };
 
 window.updateAttributeHUD = function updateAttributeHUD() {
@@ -225,6 +324,7 @@ window.updateAttributeHUD = function updateAttributeHUD() {
     }
     row.querySelector('.attribute-value').textContent = value;
     row.querySelector('.attribute-fill').style.width = `${value}%`;
+    row.querySelector('.attribute-description').textContent = getAttributeDescriptor(attr, value);
   });
 
   Array.from(rowsContainer.children).forEach((row) => {
@@ -254,11 +354,13 @@ function hideImpactPopup() {
 window.showImpactPopup = function showImpactPopup(choice, onDismiss) {
   const popup = document.getElementById('impact-popup');
   const consequence = document.getElementById('impact-consequence');
+  const interpretation = document.getElementById('impact-interpretation');
+  const systemAdvantage = document.getElementById('impact-system-advantage');
   const deltas = document.getElementById('impact-deltas');
   const progressFill = document.getElementById('impact-progress-fill');
   const continueButton = document.getElementById('impact-continue');
 
-  if (!popup || !consequence || !deltas || !progressFill || !continueButton) {
+  if (!popup || !consequence || !interpretation || !systemAdvantage || !deltas || !progressFill || !continueButton) {
     onDismiss?.();
     return;
   }
@@ -273,7 +375,10 @@ window.showImpactPopup = function showImpactPopup(choice, onDismiss) {
 
   window.applyEffects(choice.effects);
 
+  const narrative = buildEffectNarrative(choice.effects);
   consequence.textContent = choice.consequence || 'Choice logged. Outcome delta recorded.';
+  interpretation.textContent = narrative.interpretation;
+  systemAdvantage.textContent = narrative.advantage;
   deltas.innerHTML = '';
 
   const effectEntries = Object.entries(choice.effects || {});
@@ -339,7 +444,7 @@ window.showImpactPopup = function showImpactPopup(choice, onDismiss) {
 
   continueButton.addEventListener('click', dismiss);
   impactCleanup = () => continueButton.removeEventListener('click', dismiss);
-  impactDismissTimer = window.setTimeout(dismiss, 3500);
+  impactDismissTimer = window.setTimeout(dismiss, 4400);
 };
 
 enrichChoiceData();

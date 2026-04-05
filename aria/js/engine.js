@@ -4,9 +4,43 @@
 let currentStory = null;
 let currentSceneIndex = 0;
 let storyProgress = {}; // { storyId: endingKey }
+let choiceIdleTimer = null;
+
+const CHOICE_IDLE_WARNING_DELAY = 12000;
+
+function clearChoiceIdleWarning() {
+  if (choiceIdleTimer) {
+    clearTimeout(choiceIdleTimer);
+    choiceIdleTimer = null;
+  }
+
+  const warning = document.getElementById('choice-idle-warning');
+  if (!warning) return;
+
+  warning.style.opacity = '0';
+  warning.style.transform = 'translateY(8px)';
+}
+
+function scheduleChoiceIdleWarning() {
+  clearChoiceIdleWarning();
+
+  const warning = document.getElementById('choice-idle-warning');
+  if (!warning) return;
+
+  choiceIdleTimer = setTimeout(() => {
+    if (!currentStory || document.getElementById('scene').style.display === 'none') return;
+    const availableChoices = document.querySelectorAll('.choice-btn:not(:disabled)');
+    if (!availableChoices.length) return;
+
+    warning.style.opacity = '1';
+    warning.style.transform = 'translateY(0)';
+  }, CHOICE_IDLE_WARNING_DELAY);
+}
 
 // Render scene with fade transition
 function renderScene(scene) {
+  clearChoiceIdleWarning();
+
   // 1. Fade out
   document.getElementById('scene').classList.add('fade-out');
 
@@ -36,11 +70,14 @@ function renderScene(scene) {
 
     // 6. Fade in
     document.getElementById('scene').classList.remove('fade-out');
+    scheduleChoiceIdleWarning();
   }, 800);
 }
 
 // Handle choice click
 function handleChoice(choice) {
+  clearChoiceIdleWarning();
+
   // Disable buttons immediately
   document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
 
@@ -65,6 +102,7 @@ function startStory(story) {
   currentStory = story;
   currentSceneIndex = 0;
   currentStory.choiceHistory = [];
+  clearChoiceIdleWarning();
   resetCaseAttributes();
 
   window.setArticleButtonVisible?.(false);

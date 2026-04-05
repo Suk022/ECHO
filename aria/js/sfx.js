@@ -1,5 +1,5 @@
 const UI_SOUNDS = {
-  click: new Audio('assests/sounds/click.m4a'),
+  click: new Audio('assests/sounds/click.mp3'),
   enter: new Audio('assests/sounds/enter.m4a'),
   cancel: new Audio('assests/sounds/cancel.m4a'),
 };
