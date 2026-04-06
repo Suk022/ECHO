@@ -135,7 +135,10 @@ function renderArticles(articles) {
                   background:rgba(0,229,160,0.05);
                   font-family:'Share Tech Mono',monospace;font-size:14px;
                   color:rgba(0,229,160,0.4);letter-spacing:1px;">
-      If you are seeing this, it means the backend is still processing. Please refresh and come back later.
+      Hey! The server's just waking up.
+      This project runs on Render's free tier, which sleeps between visits.
+      Give it a minute and the articles will load.
+      Thanks for waiting.
       </div>`;
     return;
   }

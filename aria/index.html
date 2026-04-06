@@ -166,6 +166,7 @@
   <!-- MIRROR ENDING -->
   <div id="mirror-ending">
     <div id="mirror-shell">
+      <button id="mirror-close" type="button" aria-label="Close final report" onclick="backToSelect()">CLOSE</button>
       <div id="mirror-kicker">AGGREGATE ANALYSIS</div>
       <div id="mirror-topline">
         <h2 id="mirror-title">FINAL REPORT</h2>
@@ -203,7 +204,7 @@
     </div>
     <div id="article-grid-wrapper">
       <div id="article-error">
-        Backend Service is not running. Please start the backend server at localhost:8000
+        OOPS! something must have gone wrong. I have deployed the backend on Render, Either it is sleeping or there is some issue with the deployment.
       </div>
       <div id="article-grid"></div>    
     </div>
@@ -230,6 +231,7 @@
   <script src="js/registry.js"></script>
 
   <script src="js/final-report.js"></script>
+  <script src="js/final-report-v2.js"></script>
 
   <!-- wraps existing functions -->
   <script src="js/polish.js"></script>
