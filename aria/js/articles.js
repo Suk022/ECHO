@@ -131,9 +131,11 @@ function renderArticles(articles) {
   if (!articles || articles.length === 0) {
     grid.innerHTML = `
       <div style="grid-column:1/-1;text-align:center;padding:40px;
-                  font-family:'Share Tech Mono',monospace;font-size:11px;
-                  color:rgba(0,229,160,0.4);letter-spacing:2px;">
-      No articles, don't worry - backend is still processing, just refresh and come back
+                  border:1px solid rgba(0,229,160,0.1);
+                  background:rgba(0,229,160,0.05);
+                  font-family:'Share Tech Mono',monospace;font-size:14px;
+                  color:rgba(0,229,160,0.4);letter-spacing:1px;">
+      If you are seeing this, it means the backend is still processing. Please refresh and come back later.
       </div>`;
     return;
   }

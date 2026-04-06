@@ -164,10 +164,18 @@
   </div>
 
   <!-- MIRROR ENDING -->
-  <div id="mirror-ending" style="display:none; position:fixed; inset:0; background:#000; z-index:300; flex-direction:column; align-items:center; justify-content:center; padding:40px; gap:32px;">
-    <div id="mirror-report" style="font-family:'Share Tech Mono'; font-size:12px; color:#00e5a0; max-width:560px; white-space:pre-wrap; line-height:2;"></div>
-    <div id="mirror-text" style="font-family:'Playfair Display'; font-style:italic; font-size:22px; color:rgba(255,255,255,0.7); max-width:560px; text-align:center; line-height:1.9; opacity:0; transition:opacity 3s ease;"></div>
-    <button onclick="location.reload()" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 32px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px; opacity:0; transition:opacity 2s ease;" id="restart-btn">BEGIN AGAIN</button>
+  <div id="mirror-ending">
+    <div id="mirror-shell">
+      <div id="mirror-kicker">AGGREGATE ANALYSIS</div>
+      <div id="mirror-topline">
+        <h2 id="mirror-title">FINAL REPORT</h2>
+        <p id="mirror-intro"></p>
+      </div>
+      <div id="mirror-metrics"></div>
+      <div id="mirror-cases"></div>
+      <div id="mirror-final"></div>
+      <button onclick="location.reload()" id="restart-btn">BEGIN AGAIN</button>
+    </div>
   </div>
 
 <!-- ARTICLE BUTTON -->
@@ -220,6 +228,8 @@
 
   <!-- Registry reads ALL_STORIES from the story files above -->
   <script src="js/registry.js"></script>
+
+  <script src="js/final-report.js"></script>
 
   <!-- wraps existing functions -->
   <script src="js/polish.js"></script>

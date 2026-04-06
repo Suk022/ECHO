@@ -708,34 +708,190 @@ body.boot-active {
   display: none;
   position: fixed;
   inset: 0;
-  background: #000;
+  background:
+    radial-gradient(circle at top center, rgba(0, 229, 160, 0.07), transparent 28%),
+    linear-gradient(180deg, #06080b 0%, #030405 100%);
   z-index: 300;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px;
-  gap: 32px;
+  padding: 34px;
 }
 
-#mirror-report {
+#mirror-shell {
+  width: min(1120px, 100%);
+  max-height: calc(100vh - 68px);
+  overflow: auto;
+  padding: 34px 34px 28px;
+  border: 1px solid rgba(0, 229, 160, 0.16);
+  background: rgba(9, 12, 15, 0.94);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.42);
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+#mirror-ending.mirror-visible #mirror-shell {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+#mirror-kicker {
   font-family: 'Share Tech Mono';
-  font-size: 12px;
-  color: var(--echo-green);
-  max-width: 560px;
-  white-space: pre-wrap;
-  line-height: 2;
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: rgba(0, 229, 160, 0.68);
+  margin-bottom: 14px;
 }
 
-#mirror-text {
+#mirror-topline {
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(320px, 1fr);
+  gap: 28px;
+  align-items: end;
+  margin-bottom: 26px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+#mirror-title {
+  margin: 0;
+  font-family: 'Playfair Display';
+  font-size: clamp(2.8rem, 6vw, 4.4rem);
+  line-height: 0.94;
+  color: #f0ece4;
+}
+
+#mirror-intro {
+  margin: 0;
+  font-family: Lora;
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.68);
+}
+
+#mirror-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.mirror-metric {
+  padding: 14px 14px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mirror-metric-label {
+  font-family: 'Share Tech Mono';
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.42);
+  margin-bottom: 10px;
+}
+
+.mirror-metric-value {
+  font-family: 'Playfair Display';
+  font-size: 28px;
+  color: #f0ece4;
+}
+
+.mirror-metric-system .mirror-metric-value {
+  color: rgba(0, 229, 160, 0.92);
+}
+
+.mirror-metric-good .mirror-metric-value {
+  color: #8ed2ae;
+}
+
+.mirror-metric-risk .mirror-metric-value {
+  color: #e2a374;
+}
+
+#mirror-cases {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.mirror-case-card {
+  padding: 18px 18px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.mirror-case-positive {
+  border-color: rgba(92, 190, 142, 0.26);
+}
+
+.mirror-case-captured {
+  border-color: rgba(0, 229, 160, 0.18);
+}
+
+.mirror-case-critical {
+  border-color: rgba(215, 109, 109, 0.28);
+}
+
+.mirror-case-meta {
+  font-family: 'Share Tech Mono';
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: rgba(255, 255, 255, 0.42);
+  margin-bottom: 10px;
+}
+
+.mirror-case-title {
+  margin: 0 0 10px;
+  font-family: 'Playfair Display';
+  font-size: 24px;
+  color: #f0ece4;
+}
+
+.mirror-case-summary {
+  margin: 0 0 12px;
+  font-family: Lora;
+  font-size: 15px;
+  line-height: 1.75;
+  color: rgba(255, 255, 255, 0.76);
+}
+
+.mirror-case-outcome {
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: 'Share Tech Mono';
+  font-size: 11px;
+  line-height: 1.7;
+  letter-spacing: 1px;
+  color: rgba(0, 229, 160, 0.72);
+}
+
+#mirror-final {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-family: 'Playfair Display';
   font-style: italic;
-  font-size: 22px;
-  color: rgba(255,255,255,0.7);
-  max-width: 560px;
-  text-align: center;
-  line-height: 1.9;
-  opacity: 0;
-  transition: opacity 3s ease;
+  font-size: 26px;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+#restart-btn {
+  margin-top: 24px;
+  font-family: 'Share Tech Mono';
+  font-size: 12px;
+  padding: 12px 32px;
+  background: transparent;
+  border: 1px solid rgba(0,229,160,0.4);
+  color: #00e5a0;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+}
+
+#restart-btn:hover {
+  background: rgba(0,229,160,0.08);
+  transform: translateY(-1px);
 }
 
 /* Choice button meta text */
@@ -826,6 +982,20 @@ body.boot-active {
   #ending-layout {
     grid-template-columns: 1fr;
     gap: 20px;
+  }
+
+  #mirror-shell {
+    padding: 22px 18px 24px;
+  }
+
+  #mirror-topline {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  #mirror-metrics,
+  #mirror-cases {
+    grid-template-columns: 1fr;
   }
 
   .story-card,

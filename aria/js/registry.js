@@ -31,6 +31,7 @@ function buildStorySelect() {
 
   ALL_STORIES.forEach(story => {
     const completed = storyProgress[story.id];
+    const endingCount = Object.keys(story.endings || {}).length;
     const preview = STORY_PREVIEWS[story.id];
     const card = document.createElement('div');
     card.className = 'story-card';
@@ -43,7 +44,7 @@ function buildStorySelect() {
         <div class="story-card-title">${story.title}</div>
         <div class="story-card-tagline">${story.tagline}</div>
         <div class="story-card-subject">${story.subject}</div>
-        ${completed ? '<div class="story-card-complete">COMPLETED</div>' : ''}
+        ${completed ? `<div class="story-card-complete">1/${endingCount} ENDING REACHED</div>` : ''}
       </div>
       <div class="story-card-expanded">
         <div class="story-card-case">CASE ${story.caseNumber}</div>
