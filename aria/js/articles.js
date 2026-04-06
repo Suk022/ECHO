@@ -137,7 +137,7 @@ function renderArticles(articles) {
                   color:rgba(0,229,160,0.4);letter-spacing:1px;">
       Hey! The server's just waking up.
       This project runs on Render's free tier, which sleeps between visits.
-      Give it a minute and the articles will load.
+      Give it a few seconds and the articles will load.
       Thanks for waiting.
       </div>`;
     return;
