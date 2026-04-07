@@ -1,5 +1,10 @@
 import { ALL_STORIES } from '../data/stories/index.js';
-import { getStoryProgress } from '../core/state.js';
+import {
+  getCompletedCaseCount,
+  getFinalReportSnapshots,
+  getStoryProgress,
+  setFinalReportSnapshot,
+} from '../core/state.js';
 import { getCaseAttributes, updateAttributeHUD } from '../core/impact-system.js';
 import {
   addAfterTriggerEndingHook,
@@ -41,7 +46,6 @@ const FINAL_REPORT_V2_SUMMARIES = {
   }
 };
 
-const caseOutcomeSnapshotsV2 = {};
 let finalReportV2Timer = null;
 
 function setFinalReportOpenStateV2(isOpen) {
@@ -51,7 +55,7 @@ function setFinalReportOpenStateV2(isOpen) {
 }
 
 function finalReportV2Unlocked() {
-  return Object.keys(getStoryProgress()).length >= 5;
+  return getCompletedCaseCount() >= 5;
 }
 
 function clampPercentV2(value) {
@@ -117,14 +121,15 @@ export function updateStorySelectUnlockStateV2() {
 
 function buildFinalReportDataV2() {
   const storyProgress = getStoryProgress();
+  const snapshots = getFinalReportSnapshots();
   const completedStories = ALL_STORIES
     .map((story) => {
-      const endingKey = storyProgress[story.id];
-      if (!endingKey) return null;
+      const progressEntry = storyProgress[story.id];
+      if (!progressEntry?.latestEnding) return null;
       return {
         story,
-        endingKey,
-        attributes: caseOutcomeSnapshotsV2[story.id]?.attributes || {}
+        endingKey: progressEntry.latestEnding,
+        attributes: snapshots[story.id]?.attributes || {}
       };
     })
     .filter(Boolean);
@@ -269,10 +274,10 @@ function openFinalReport() {
 export function initFinalReportV2() {
   addAfterTriggerEndingHook((endingKey, attributes, currentStory) => {
     if (currentStory?.id) {
-      caseOutcomeSnapshotsV2[currentStory.id] = {
+      setFinalReportSnapshot(currentStory.id, {
         endingKey,
         attributes: { ...attributes },
-      };
+      });
     }
 
     const nextCaseButton = document.getElementById('next-case-btn');

@@ -1,4 +1,16 @@
 <div id="story-select" style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; background:#0d0f14; padding:40px; gap:20px;">
+  <div id="reset-state-wrap">
+    <button id="reset-state-btn" aria-label="Reset game state" title="Reset progress">
+      <img src="./assests/icons/reset.png" alt="Reset" />
+    </button>
+    <div id="reset-state-popover" aria-live="polite">
+      <div id="reset-state-copy">Reset all case progress and return ECHO to first boot?</div>
+      <div id="reset-state-actions">
+        <button id="reset-state-confirm" type="button">YES</button>
+        <button id="reset-state-cancel" type="button">NO</button>
+      </div>
+    </div>
+  </div>
   <div id="story-select-tip" aria-live="polite">
     <img src="./assests/icons/questionMark.png" alt="" />
     <span></span>

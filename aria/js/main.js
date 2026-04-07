@@ -7,6 +7,7 @@ import { initSfx } from './ui/sfx.js';
 import { initBootScreen } from './ui/boot.js';
 import { initArticles } from './ui/articles.js';
 import { initMessageModal } from './ui/message-modal.js';
+import { initResetStateControl } from './ui/reset-state.js';
 import { continueContentWarningStory } from './core/engine.js';
 import { initPolish } from './core/polish.js';
 
@@ -20,6 +21,7 @@ async function initApp() {
   initFinalReportV2();
   initArticles();
   initMessageModal();
+  initResetStateControl();
   initBootScreen();
   initPolish();
 

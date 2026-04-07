@@ -1,5 +1,5 @@
 import { ALL_STORIES } from '../data/stories/index.js';
-import { getStoryProgress } from './state.js';
+import { getCompletedCaseCount, getStoryProgressEntry } from './state.js';
 import { startStory } from './engine.js';
 import { playUiSound } from '../ui/sfx.js';
 import { showMirrorEnding } from './endings.js';
@@ -32,7 +32,7 @@ let storySelectTipMuteTimer = null;
 let storySelectTipDismissTimer = null;
 
 function getStorySelectTipCopy() {
-  const completedCount = Object.keys(getStoryProgress()).length;
+  const completedCount = getCompletedCaseCount();
   if (completedCount >= 5) {
     return 'All case files processed. Review the full impact of your decisions across all case files.';
   }
@@ -76,12 +76,12 @@ export function buildStorySelect() {
   const container = document.getElementById('story-cards');
   if (!container) return;
 
-  const storyProgress = getStoryProgress();
   container.innerHTML = '';
   scheduleStorySelectTip();
 
   ALL_STORIES.forEach((story) => {
-    const completed = storyProgress[story.id];
+    const progressEntry = getStoryProgressEntry(story.id);
+    const endingsReachedCount = progressEntry?.endingsReached?.length || 0;
     const endingCount = Object.keys(story.endings || {}).length;
     const preview = STORY_PREVIEWS[story.id];
     const card = document.createElement('div');
@@ -95,7 +95,7 @@ export function buildStorySelect() {
         <div class="story-card-title">${story.title}</div>
         <div class="story-card-tagline">${story.tagline}</div>
         <div class="story-card-subject">${story.subject}</div>
-        ${completed ? `<div class="story-card-complete">1/${endingCount} ENDING REACHED</div>` : ''}
+        ${endingsReachedCount > 0 ? `<div class="story-card-complete">${endingsReachedCount}/${endingCount} ${endingsReachedCount === 1 ? 'ENDING' : 'ENDINGS'} REACHED</div>` : ''}
       </div>
       <div class="story-card-expanded">
         <div class="story-card-case">CASE ${story.caseNumber}</div>

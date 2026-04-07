@@ -13,6 +13,7 @@ import { resetCaseAttributes, updateAttributeHUD, showImpactPopup } from './impa
 import { triggerEnding, backToSelect } from './endings.js';
 import { setArticleButtonVisible } from '../ui/articles.js';
 import { setMessageButtonVisible } from '../ui/message-modal.js';
+import { setResetButtonVisible } from '../ui/reset-state.js';
 
 const CHOICE_IDLE_WARNING_DELAY = 12000;
 
@@ -113,6 +114,7 @@ export function startStory(story) {
 
   setArticleButtonVisible(false);
   setMessageButtonVisible(false);
+  setResetButtonVisible(false);
 
   document.documentElement.style.setProperty('--story-bg', story.palette.bg);
   document.documentElement.style.setProperty('--story-accent', story.palette.accent);
@@ -158,3 +160,4 @@ export function resetToStorySelect() {
   clearChoiceIdleWarning();
   backToSelect();
 }
+

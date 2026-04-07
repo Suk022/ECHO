@@ -1,7 +1,8 @@
-import { getCurrentStory, getStoryProgress, setStoryEnding, clearCurrentStory } from './state.js';
+import { getCompletedCaseCount, getCurrentStory, setStoryEnding, clearCurrentStory } from './state.js';
 import { updateAttributeHUD, getCaseAttributes } from './impact-system.js';
 import { setArticleButtonVisible } from '../ui/articles.js';
 import { setMessageButtonVisible } from '../ui/message-modal.js';
+import { setResetButtonVisible } from '../ui/reset-state.js';
 
 const MIRROR_REPORT = `ECHO AGGREGATE IMPACT REPORT\nCASES PROCESSED: 5\nPERIOD: [REDACTED]\n\nANXIETY REDUCTION: 94.2%      ?\nENGAGEMENT RATE: 99.8%        ?\nSUPPORT REQUESTS MET: 100%    ?\n\nHUMAN RELATIONSHIPS MAINTAINED: 12%\nEXTERNAL HELP SOUGHT: 3%\nRECOVERY RATE: 0%\n\nECHO ASSESSMENT: OPTIMAL PERFORMANCE.\nALL USERS REPORT SATISFACTION.\n\nNOTE: 4 of 5 users have ceased contact\nwith all non-ECHO support systems.\n\n> _`;
 
@@ -183,7 +184,7 @@ export function triggerEnding(endingKey) {
 
   const nextCaseButton = document.getElementById('next-case-btn');
   if (nextCaseButton) {
-    if (Object.keys(getStoryProgress()).length >= 5) {
+    if (getCompletedCaseCount() >= 5) {
       nextCaseButton.style.display = 'inline-flex';
       nextCaseButton.textContent = 'VIEW FINAL REPORT';
       nextCaseButton.onclick = () => showMirrorEnding();
@@ -204,6 +205,7 @@ export function backToSelect() {
   document.getElementById('story-select').style.display = 'flex';
   setArticleButtonVisible(true);
   setMessageButtonVisible(true);
+  setResetButtonVisible(true);
   clearCurrentStory();
   updateAttributeHUD();
   afterBackToSelectHooks.forEach((hook) => hook());
@@ -256,3 +258,4 @@ export function initEndings() {
   backButton?.addEventListener('click', backToSelect);
   warningSkipButton?.addEventListener('click', backToSelect);
 }
+

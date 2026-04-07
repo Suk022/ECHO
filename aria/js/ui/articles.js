@@ -1,10 +1,14 @@
 import { CONFIG } from '../data/config.js';
 
 const ARTICLES_API = `${CONFIG.BACKEND_URL}/articles`;
+const ARTICLE_WAKE_RETRY_MS = 4000;
+const ARTICLE_WAKE_MAX_ATTEMPTS = 8;
 let articlesCache = null;
 let fetchInProgress = false;
 let articleButton;
 let articleModal;
+let wakeRetryTimer = null;
+let wakeRetryAttempts = 0;
 
 export function initArticles() {
   articleButton = document.getElementById('article-btn');
@@ -32,12 +36,15 @@ function openArticleModal() {
 
   if (articlesCache === null && !fetchInProgress) {
     loadArticles();
+  } else if (articlesCache && articlesCache.length > 0) {
+    renderArticles(articlesCache);
   }
 }
 
 function closeArticleModal() {
   articleModal.classList.remove('open');
   document.body.style.overflow = '';
+  clearWakeRetry();
 }
 
 export function setArticleButtonVisible(visible) {
@@ -50,7 +57,9 @@ export function setArticleButtonVisible(visible) {
 
 async function loadArticles() {
   fetchInProgress = true;
-  showSkeletons(7);
+  if (!articlesCache || articlesCache.length === 0) {
+    showSkeletons(7);
+  }
 
   try {
     const response = await fetch(ARTICLES_API);
@@ -60,26 +69,58 @@ async function loadArticles() {
     const articles = data.articles || [];
 
     articlesCache = articles;
-
-    if (!data.ready && articles.length < 10) {
-      setTimeout(async () => {
-        try {
-          const retry = await fetch(ARTICLES_API);
-          const retryData = await retry.json();
-          articlesCache = retryData.articles || articles;
-          renderArticles(articlesCache);
-        } catch (_) {
-          // Keep the best available result from the initial fetch.
-        }
-      }, 4000);
-    }
-
     renderArticles(articles);
+
+    if ((!data.ready || articles.length === 0) && articleModal?.classList.contains('open')) {
+      scheduleWakeRetry();
+    } else {
+      clearWakeRetry();
+    }
   } catch (err) {
     console.error('Article fetch failed:', err);
-    showError();
+    const shouldShowWakeMessage = wakeRetryAttempts < ARTICLE_WAKE_MAX_ATTEMPTS;
+
+    if (shouldShowWakeMessage) {
+      showWakeMessage();
+    } else {
+      showError();
+    }
+
+    if (articleModal?.classList.contains('open') && shouldShowWakeMessage) {
+      scheduleWakeRetry();
+    } else {
+      clearWakeRetry();
+    }
   } finally {
     fetchInProgress = false;
+  }
+}
+
+function scheduleWakeRetry() {
+  if (wakeRetryTimer || wakeRetryAttempts >= ARTICLE_WAKE_MAX_ATTEMPTS) {
+    return;
+  }
+
+  wakeRetryTimer = window.setTimeout(() => {
+    wakeRetryTimer = null;
+    wakeRetryAttempts += 1;
+
+    if (!articleModal?.classList.contains('open') || fetchInProgress) {
+      return;
+    }
+
+    loadArticles();
+  }, ARTICLE_WAKE_RETRY_MS);
+}
+
+function clearWakeRetry() {
+  if (wakeRetryTimer) {
+    clearTimeout(wakeRetryTimer);
+    wakeRetryTimer = null;
+  }
+
+  if (!articleModal?.classList.contains('open')) {
+    wakeRetryAttempts = 0;
   }
 }
 
@@ -130,24 +171,32 @@ function showError() {
   document.getElementById('article-grid').innerHTML = '';
 }
 
+function showWakeMessage() {
+  document.getElementById('article-error').style.display = 'none';
+  document.getElementById('article-grid').innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;padding:40px;
+                border:1px solid rgba(0,229,160,0.1);
+                background:rgba(0,229,160,0.05);
+                font-family:'Share Tech Mono',monospace;font-size:14px;
+                color:rgba(0,229,160,0.4);letter-spacing:1px;">
+    Hey! The server's just waking up.
+    This project runs on Render's free tier, which sleeps between visits.
+    Give it a few seconds and the articles will load.
+    Thanks for waiting.
+    </div>`;
+}
+
 function renderArticles(articles) {
   document.getElementById('article-error').style.display = 'none';
   const grid = document.getElementById('article-grid');
 
   if (!articles || articles.length === 0) {
-    grid.innerHTML = `
-      <div style="grid-column:1/-1;text-align:center;padding:40px;
-                  border:1px solid rgba(0,229,160,0.1);
-                  background:rgba(0,229,160,0.05);
-                  font-family:'Share Tech Mono',monospace;font-size:14px;
-                  color:rgba(0,229,160,0.4);letter-spacing:1px;">
-      Hey! The server's just waking up.
-      This project runs on Render's free tier, which sleeps between visits.
-      Give it a few seconds and the articles will load.
-      Thanks for waiting.
-      </div>`;
+    showWakeMessage();
     return;
   }
+
+  wakeRetryAttempts = 0;
+  clearWakeRetry();
 
   const orderedArticles = prioritizeArticles(articles);
   const featured = orderedArticles[0];
