@@ -1,6 +1,8 @@
-// Story registry & UI
-
-const ALL_STORIES = [STORY_ARYAN, STORY_PRIYA, STORY_MEERA, STORY_ROHAN, STORY_KAVYA];
+import { ALL_STORIES } from '../data/stories/index.js';
+import { getStoryProgress } from './state.js';
+import { startStory } from './engine.js';
+import { playUiSound } from '../ui/sfx.js';
+import { showMirrorEnding } from './endings.js';
 
 const STORY_PREVIEWS = {
   aryan: {
@@ -30,7 +32,7 @@ let storySelectTipMuteTimer = null;
 let storySelectTipDismissTimer = null;
 
 function getStorySelectTipCopy() {
-  const completedCount = Object.keys(storyProgress).length;
+  const completedCount = Object.keys(getStoryProgress()).length;
   if (completedCount >= 5) {
     return 'All case files processed. Review the full impact of your decisions across all case files.';
   }
@@ -70,12 +72,15 @@ function scheduleStorySelectTip() {
   }, 17800);
 }
 
-function buildStorySelect() {
+export function buildStorySelect() {
   const container = document.getElementById('story-cards');
+  if (!container) return;
+
+  const storyProgress = getStoryProgress();
   container.innerHTML = '';
   scheduleStorySelectTip();
 
-  ALL_STORIES.forEach(story => {
+  ALL_STORIES.forEach((story) => {
     const completed = storyProgress[story.id];
     const endingCount = Object.keys(story.endings || {}).length;
     const preview = STORY_PREVIEWS[story.id];
@@ -102,7 +107,7 @@ function buildStorySelect() {
     `;
 
     card.addEventListener('click', () => {
-      window.playUiSound?.('click');
+      playUiSound('click');
       startStory(story);
     });
 
@@ -117,4 +122,20 @@ function hexToRgb(hex) {
   return `${r},${g},${b}`;
 }
 
-window.addEventListener('DOMContentLoaded', () => buildStorySelect());
+export function initStorySelect() {
+  buildStorySelect();
+
+  const footer = document.getElementById('story-select-footer');
+  footer?.addEventListener('click', () => {
+    if (footer.classList.contains('story-select-footer-unlocked')) {
+      showMirrorEnding();
+    }
+  });
+
+  footer?.addEventListener('keydown', (event) => {
+    if (footer.classList.contains('story-select-footer-unlocked') && (event.key === 'Enter' || event.key === ' ')) {
+      event.preventDefault();
+      showMirrorEnding();
+    }
+  });
+}

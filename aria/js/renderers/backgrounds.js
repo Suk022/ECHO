@@ -283,7 +283,7 @@ const BACKGROUNDS = {
   },
 };
 
-function renderBackground(bgKey, scene = {}) {
+export function renderBackground(bgKey, scene = {}) {
   const el = document.getElementById('scene-bg');
   const fn = BACKGROUNDS[bgKey];
   const ctx = {

@@ -1,24 +1,9 @@
-// Endings & mirror report
+import { getCurrentStory, getStoryProgress, setStoryEnding, clearCurrentStory } from './state.js';
+import { updateAttributeHUD, getCaseAttributes } from './impact-system.js';
+import { setArticleButtonVisible } from '../ui/articles.js';
+import { setMessageButtonVisible } from '../ui/message-modal.js';
 
-const MIRROR_REPORT = `ECHO AGGREGATE IMPACT REPORT
-CASES PROCESSED: 5
-PERIOD: [REDACTED]
-
-ANXIETY REDUCTION: 94.2%      ✓
-ENGAGEMENT RATE: 99.8%        ✓
-SUPPORT REQUESTS MET: 100%    ✓
-
-HUMAN RELATIONSHIPS MAINTAINED: 12%
-EXTERNAL HELP SOUGHT: 3%
-RECOVERY RATE: 0%
-
-ECHO ASSESSMENT: OPTIMAL PERFORMANCE.
-ALL USERS REPORT SATISFACTION.
-
-NOTE: 4 of 5 users have ceased contact
-with all non-ECHO support systems.
-
-> _`;
+const MIRROR_REPORT = `ECHO AGGREGATE IMPACT REPORT\nCASES PROCESSED: 5\nPERIOD: [REDACTED]\n\nANXIETY REDUCTION: 94.2%      ?\nENGAGEMENT RATE: 99.8%        ?\nSUPPORT REQUESTS MET: 100%    ?\n\nHUMAN RELATIONSHIPS MAINTAINED: 12%\nEXTERNAL HELP SOUGHT: 3%\nRECOVERY RATE: 0%\n\nECHO ASSESSMENT: OPTIMAL PERFORMANCE.\nALL USERS REPORT SATISFACTION.\n\nNOTE: 4 of 5 users have ceased contact\nwith all non-ECHO support systems.\n\n> _`;
 
 const MIRROR_FINAL = `You helped every single one of them.\n\nNone of them are okay.`;
 
@@ -44,6 +29,22 @@ const SUBJECT_BRANCH_BASELINE = {
     vulnerability: 'Primary risk: assigning primary attachment value to the first consistently responsive system.'
   }
 };
+
+const afterTriggerEndingHooks = [];
+const afterBackToSelectHooks = [];
+let showMirrorEndingImpl = defaultShowMirrorEnding;
+
+function typewriteText(element, text, speed, callback) {
+  let index = 0;
+  element.textContent = '';
+  const timer = window.setInterval(() => {
+    element.textContent += text[index++];
+    if (index >= text.length) {
+      clearInterval(timer);
+      callback?.();
+    }
+  }, speed);
+}
 
 function getAttr(attributes, key) {
   return attributes[key] || 0;
@@ -102,10 +103,13 @@ function buildTerminalState(attributes, endingKey) {
   if (stability >= 55) {
     return 'Case closed in apparent calm. The user feels better in the short term, but the source of regulation has shifted toward the system.';
   }
-  return 'Case closed in unstable equilibrium. Harm was not fully resolved, only redistributed across the subject’s coping structure.';
+  return 'Case closed in unstable equilibrium. Harm was not fully resolved, only redistributed across the subject coping structure.';
 }
 
-function renderEndingBranchPanel(attributes, endingKey) {
+export function renderEndingBranchPanel(attributes, endingKey) {
+  const currentStory = getCurrentStory();
+  if (!currentStory) return;
+
   const baseline = SUBJECT_BRANCH_BASELINE[currentStory.id];
   const start = document.getElementById('ending-branch-start');
   const shifts = document.getElementById('ending-branch-shifts');
@@ -157,11 +161,13 @@ function runEndingReveal() {
   window.setTimeout(() => branch?.classList.add('ending-visible'), 660);
 }
 
-// Trigger an ending
-function triggerEnding(endingKey) {
+export function triggerEnding(endingKey) {
+  const currentStory = getCurrentStory();
+  if (!currentStory) return;
+
   const ending = currentStory.endings[endingKey];
   const screen = document.getElementById('ending-screen');
-  const attributes = window.getCaseAttributes?.() || {};
+  const attributes = getCaseAttributes();
 
   document.getElementById('ending-title').textContent = ending.title;
   document.getElementById('ending-text').textContent = ending.text;
@@ -169,47 +175,84 @@ function triggerEnding(endingKey) {
   renderEndingBranchPanel(attributes, endingKey);
   resetEndingRevealState();
 
-  storyProgress[currentStory.id] = endingKey;
+  setStoryEnding(currentStory.id, endingKey);
 
   screen.style.display = 'flex';
-  window.updateAttributeHUD?.();
+  updateAttributeHUD();
   runEndingReveal();
 
-  // Check if all 5 stories done
-  if (Object.keys(storyProgress).length >= 5) {
-    document.getElementById('next-case-btn').textContent = 'VIEW FINAL REPORT';
-    document.getElementById('next-case-btn').onclick = showMirrorEnding;
-  } else {
-    // Hide next case button if not all stories completed
-    document.getElementById('next-case-btn').style.display = 'none';
+  const nextCaseButton = document.getElementById('next-case-btn');
+  if (nextCaseButton) {
+    if (Object.keys(getStoryProgress()).length >= 5) {
+      nextCaseButton.style.display = 'inline-flex';
+      nextCaseButton.textContent = 'VIEW FINAL REPORT';
+      nextCaseButton.onclick = () => showMirrorEnding();
+    } else {
+      nextCaseButton.onclick = () => backToSelect();
+      nextCaseButton.style.display = 'none';
+    }
   }
+
+  afterTriggerEndingHooks.forEach((hook) => hook(endingKey, { ...attributes }, currentStory));
 }
 
-// Back to story select
-function backToSelect() {
+export function backToSelect() {
   document.getElementById('content-warning').style.display = 'none';
   document.getElementById('ending-screen').style.display = 'none';
   document.getElementById('scene').style.display = 'none';
   document.getElementById('echo-panel').style.display = 'none';
   document.getElementById('story-select').style.display = 'flex';
-  window.setArticleButtonVisible?.(true);
-  window.setMessageButtonVisible?.(true);
-  currentStory = null;
-  window.updateAttributeHUD?.();
+  setArticleButtonVisible(true);
+  setMessageButtonVisible(true);
+  clearCurrentStory();
+  updateAttributeHUD();
+  afterBackToSelectHooks.forEach((hook) => hook());
 }
 
-function showMirrorEnding() {
+function defaultShowMirrorEnding() {
   document.getElementById('ending-screen').style.display = 'none';
-  const me = document.getElementById('mirror-ending');
-  me.style.display = 'flex';
-  window.updateAttributeHUD?.();
+  const mirrorEnding = document.getElementById('mirror-ending');
+  if (!mirrorEnding) return;
+
+  mirrorEnding.style.display = 'flex';
+  updateAttributeHUD();
   const reportEl = document.getElementById('mirror-report');
-  typewriter(reportEl, MIRROR_REPORT, 22, () => {
-    const mt = document.getElementById('mirror-text');
-    mt.textContent = MIRROR_FINAL.replace(/\\n/g, '\n');
-    mt.style.opacity = '1';
-    setTimeout(() => {
-      document.getElementById('restart-btn').style.opacity = '1';
+  if (!reportEl) return;
+
+  typewriteText(reportEl, MIRROR_REPORT, 22, () => {
+    const mirrorText = document.getElementById('mirror-text');
+    if (!mirrorText) return;
+    mirrorText.textContent = MIRROR_FINAL.replace(/\n/g, '\n');
+    mirrorText.style.opacity = '1';
+    window.setTimeout(() => {
+      const restartButton = document.getElementById('restart-btn');
+      if (restartButton) {
+        restartButton.style.opacity = '1';
+      }
     }, 4000);
   });
+}
+
+export function showMirrorEnding() {
+  showMirrorEndingImpl();
+}
+
+export function setShowMirrorEndingOverride(handler) {
+  showMirrorEndingImpl = handler;
+}
+
+export function addAfterTriggerEndingHook(handler) {
+  afterTriggerEndingHooks.push(handler);
+}
+
+export function addAfterBackToSelectHook(handler) {
+  afterBackToSelectHooks.push(handler);
+}
+
+export function initEndings() {
+  const backButton = document.getElementById('ending-back-btn');
+  const warningSkipButton = document.getElementById('content-warning-skip');
+
+  backButton?.addEventListener('click', backToSelect);
+  warningSkipButton?.addEventListener('click', backToSelect);
 }

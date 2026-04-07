@@ -4,11 +4,13 @@ const UI_SOUNDS = {
   cancel: new Audio('assests/sounds/cancel.m4a'),
 };
 
-Object.values(UI_SOUNDS).forEach((audio) => {
-  audio.preload = 'auto';
-});
+export function initSfx() {
+  Object.values(UI_SOUNDS).forEach((audio) => {
+    audio.preload = 'auto';
+  });
+}
 
-window.playUiSound = function playUiSound(name) {
+export function playUiSound(name) {
   const source = UI_SOUNDS[name];
   if (!source) return;
 
@@ -21,4 +23,4 @@ window.playUiSound = function playUiSound(name) {
   } catch (_) {
     // Ignore playback errors caused by browser autoplay policies.
   }
-};
+}

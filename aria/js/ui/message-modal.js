@@ -76,11 +76,34 @@ function injectMessageModalComponent() {
   document.body.insertAdjacentHTML('beforeend', MESSAGE_MODAL_TEMPLATE);
 }
 
-injectMessageModalComponent();
+let messageButton;
+let messageModal;
+let messageModalClose;
 
-const messageButton = document.getElementById('message-btn');
-const messageModal = document.getElementById('message-modal');
-const messageModalClose = document.getElementById('message-modal-close');
+export function initMessageModal() {
+  injectMessageModalComponent();
+
+  messageButton = document.getElementById('message-btn');
+  messageModal = document.getElementById('message-modal');
+  messageModalClose = document.getElementById('message-modal-close');
+
+  if (messageButton && messageModal && messageModalClose) {
+    messageButton.addEventListener('click', openMessageModal);
+    messageModalClose.addEventListener('click', closeMessageModal);
+
+    messageModal.addEventListener('click', (event) => {
+      if (event.target === messageModal) {
+        closeMessageModal();
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        closeMessageModal();
+      }
+    });
+  }
+}
 
 function openMessageModal() {
   if (!messageModal) return;
@@ -95,27 +118,10 @@ function closeMessageModal() {
   document.body.style.overflow = '';
 }
 
-if (messageButton && messageModal && messageModalClose) {
-  messageButton.addEventListener('click', openMessageModal);
-  messageModalClose.addEventListener('click', closeMessageModal);
-
-  messageModal.addEventListener('click', (event) => {
-    if (event.target === messageModal) {
-      closeMessageModal();
-    }
-  });
-
-  document.addEventListener('keydown', (event) => {
-    if (event.key === 'Escape') {
-      closeMessageModal();
-    }
-  });
-}
-
-window.setMessageButtonVisible = function setMessageButtonVisible(visible) {
+export function setMessageButtonVisible(visible) {
   if (!messageButton) return;
   messageButton.style.display = visible ? 'flex' : 'none';
   if (!visible) {
     closeMessageModal();
   }
-};
+}

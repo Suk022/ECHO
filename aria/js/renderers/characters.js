@@ -1,6 +1,4 @@
-// Character renderer
-
-function renderCharacter(charState, scene = {}) {
+export function renderCharacter(charState, scene = {}) {
   const container = document.getElementById('scene-character');
   const { figure, state, name } = charState;
   container.innerHTML = buildCharacterSVG(figure, state, name, scene);

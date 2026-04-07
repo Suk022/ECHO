@@ -1,17 +1,26 @@
-// Scene engine
-
-// Global state
-let currentStory = null;
-let currentSceneIndex = 0;
-let storyProgress = {}; // { storyId: endingKey }
-let choiceIdleTimer = null;
+import { renderBackground } from '../renderers/backgrounds.js';
+import { renderCharacter } from '../renderers/characters.js';
+import {
+  getCurrentStory,
+  setCurrentStory,
+  getCurrentSceneIndex,
+  setCurrentSceneIndex,
+  clearCurrentStory,
+  getChoiceIdleTimer,
+  setChoiceIdleTimer,
+} from './state.js';
+import { resetCaseAttributes, updateAttributeHUD, showImpactPopup } from './impact-system.js';
+import { triggerEnding, backToSelect } from './endings.js';
+import { setArticleButtonVisible } from '../ui/articles.js';
+import { setMessageButtonVisible } from '../ui/message-modal.js';
 
 const CHOICE_IDLE_WARNING_DELAY = 12000;
 
-function clearChoiceIdleWarning() {
+export function clearChoiceIdleWarning() {
+  const choiceIdleTimer = getChoiceIdleTimer();
   if (choiceIdleTimer) {
     clearTimeout(choiceIdleTimer);
-    choiceIdleTimer = null;
+    setChoiceIdleTimer(null);
   }
 
   const warning = document.getElementById('choice-idle-warning');
@@ -21,45 +30,42 @@ function clearChoiceIdleWarning() {
   warning.style.transform = 'translateY(8px)';
 }
 
-function scheduleChoiceIdleWarning() {
+export function scheduleChoiceIdleWarning() {
   clearChoiceIdleWarning();
 
   const warning = document.getElementById('choice-idle-warning');
   if (!warning) return;
 
-  choiceIdleTimer = setTimeout(() => {
-    if (!currentStory || document.getElementById('scene').style.display === 'none') return;
+  const timerId = window.setTimeout(() => {
+    if (!getCurrentStory() || document.getElementById('scene').style.display === 'none') return;
     const availableChoices = document.querySelectorAll('.choice-btn:not(:disabled)');
     if (!availableChoices.length) return;
 
     warning.style.opacity = '1';
     warning.style.transform = 'translateY(0)';
   }, CHOICE_IDLE_WARNING_DELAY);
+
+  setChoiceIdleTimer(timerId);
 }
 
-// Render scene with fade transition
-function renderScene(scene) {
+export function renderScene(scene) {
   clearChoiceIdleWarning();
+  const currentStory = getCurrentStory();
+  if (!currentStory) return;
 
-  // 1. Fade out
   document.getElementById('scene').classList.add('fade-out');
 
-  setTimeout(() => {
-    // 2. Update background
+  window.setTimeout(() => {
     renderBackground(scene.background, scene);
-
-    // 3. Update character
     renderCharacter(scene.character, scene);
 
-    // 4. Update ECHO panel
     document.getElementById('echo-header').textContent =
-      `ECHO v1.0  Â·  CASE ${currentStory.caseNumber}  Â·  ${currentStory.subject}`;
+      `ECHO v1.0 · CASE ${currentStory.caseNumber} · ${currentStory.subject}`;
     document.getElementById('narrative-text').textContent = scene.narrative;
 
-    // 5. Render choices
     const container = document.getElementById('choices-container');
     container.innerHTML = '';
-    scene.choices.forEach((choice, i) => {
+    scene.choices.forEach((choice) => {
       const btn = document.createElement('button');
       btn.className = 'choice-btn';
       btn.innerHTML = `<span class="choice-label">${choice.text}</span>
@@ -68,20 +74,21 @@ function renderScene(scene) {
       container.appendChild(btn);
     });
 
-    // 6. Fade in
     document.getElementById('scene').classList.remove('fade-out');
     scheduleChoiceIdleWarning();
   }, 800);
 }
 
-// Handle choice click
-function handleChoice(choice) {
+export function handleChoice(choice) {
   clearChoiceIdleWarning();
 
-  // Disable buttons immediately
-  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+  document.querySelectorAll('.choice-btn').forEach((button) => {
+    button.disabled = true;
+  });
 
-  // Record the choice
+  const currentStory = getCurrentStory();
+  if (!currentStory) return;
+
   if (!currentStory.choiceHistory) currentStory.choiceHistory = [];
   currentStory.choiceHistory.push(choice.id);
 
@@ -91,35 +98,31 @@ function handleChoice(choice) {
       return;
     }
 
-    const nextIndex = choice.nextScene !== undefined ? choice.nextScene : currentSceneIndex + 1;
-    currentSceneIndex = nextIndex;
-    renderScene(currentStory.scenes[currentSceneIndex]);
+    const nextIndex = choice.nextScene !== undefined ? choice.nextScene : getCurrentSceneIndex() + 1;
+    setCurrentSceneIndex(nextIndex);
+    renderScene(currentStory.scenes[nextIndex]);
   });
 }
 
-// Start a story
-function startStory(story) {
-  currentStory = story;
-  currentSceneIndex = 0;
-  currentStory.choiceHistory = [];
+export function startStory(story) {
+  setCurrentStory(story);
+  setCurrentSceneIndex(0);
+  story.choiceHistory = [];
   clearChoiceIdleWarning();
   resetCaseAttributes();
 
-  window.setArticleButtonVisible?.(false);
-  window.setMessageButtonVisible?.(false);
+  setArticleButtonVisible(false);
+  setMessageButtonVisible(false);
 
-  // Set story color palette
   document.documentElement.style.setProperty('--story-bg', story.palette.bg);
   document.documentElement.style.setProperty('--story-accent', story.palette.accent);
   document.documentElement.style.setProperty('--story-warm', story.palette.warm);
 
-  // Hide story select, show scene
   document.getElementById('story-select').style.display = 'none';
   document.getElementById('scene').style.display = 'block';
   document.getElementById('echo-panel').style.display = 'block';
   updateAttributeHUD();
 
-  // Content warning for story 5
   if (story.id === 'kavya') {
     document.getElementById('content-warning').style.display = 'flex';
     return;
@@ -128,12 +131,30 @@ function startStory(story) {
   renderScene(story.scenes[0]);
 }
 
-// Typewriter effect
-function typewriter(el, text, speed, cb) {
-  let i = 0;
-  el.textContent = '';
-  const t = setInterval(() => {
-    el.textContent += text[i++];
-    if (i >= text.length) { clearInterval(t); if (cb) setTimeout(cb, 400); }
+export function continueContentWarningStory() {
+  const currentStory = getCurrentStory();
+  document.getElementById('content-warning').style.display = 'none';
+  if (currentStory) {
+    renderScene(currentStory.scenes[0]);
+  }
+}
+
+export function typewriter(element, text, speed, callback) {
+  let index = 0;
+  element.textContent = '';
+  const timer = window.setInterval(() => {
+    element.textContent += text[index++];
+    if (index >= text.length) {
+      clearInterval(timer);
+      if (callback) {
+        window.setTimeout(callback, 400);
+      }
+    }
   }, speed);
+}
+
+export function resetToStorySelect() {
+  clearCurrentStory();
+  clearChoiceIdleWarning();
+  backToSelect();
 }

@@ -1,0 +1,12 @@
+<div id="scene" style="display:none; position:fixed; inset:0; transition:opacity 0.8s;">
+  <div id="scene-bg" style="position:absolute; inset:0;"></div>
+  <div id="scene-character" style="position:absolute; bottom:22%; left:50%; transform:translateX(-50%); width:180px; height:260px;"></div>
+  <div id="scene-overlay" style="position:absolute; inset:0; pointer-events:none;"></div>
+</div>
+
+<div id="echo-panel" style="display:none; position:fixed; bottom:0; left:0; right:0; background:#0d0f14; border-top:2px solid rgba(0,229,160,0.25); padding:20px 32px 28px; z-index:100;">
+  <div id="echo-header" style="font-family:'Share Tech Mono'; font-size:11px; color:#00e5a0; letter-spacing:2px; margin-bottom:12px;"></div>
+  <div id="narrative-text" style="font-family:Lora; font-style:italic; font-size:16px; color:#e8d5b7; line-height:1.8; max-width:700px; margin:0 auto; min-height:72px;"></div>
+  <div id="choices-container" style="display:flex; gap:12px; justify-content:center; margin-top:16px; flex-wrap:wrap;"></div>
+  <div id="choice-idle-warning" aria-live="polite" style="opacity:0; transform:translateY(8px); pointer-events:none; min-height:18px; margin-top:14px; font-family:'Share Tech Mono'; font-size:10px; letter-spacing:2px; text-transform:uppercase; text-align:center; color:rgba(232,213,183,0.72); transition:opacity 0.35s ease, transform 0.35s ease;">Awaiting directive. Select an intervention path.</div>
+</div>

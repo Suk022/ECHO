@@ -1,3 +1,5 @@
+import { ALL_STORIES } from '../data/stories/index.js';
+
 const ATTRIBUTE_CONFIG = {
   DEPENDENCY: { color: '#e05050' },
   ISOLATION: { color: '#e08030' },
@@ -178,14 +180,7 @@ function buildEffectNarrative(effects = {}) {
 }
 
 function enrichChoiceData() {
-  const stories = [
-    typeof STORY_ARYAN !== 'undefined' ? STORY_ARYAN : null,
-    typeof STORY_PRIYA !== 'undefined' ? STORY_PRIYA : null,
-    typeof STORY_MEERA !== 'undefined' ? STORY_MEERA : null,
-    typeof STORY_ROHAN !== 'undefined' ? STORY_ROHAN : null,
-    typeof STORY_KAVYA !== 'undefined' ? STORY_KAVYA : null,
-  ].filter(Boolean);
-  stories.forEach((story) => {
+  ALL_STORIES.forEach((story) => {
     story.scenes.forEach((scene) => {
       scene.choices.forEach((choice) => {
         const data = IMPACT_METADATA[choice.id];
@@ -277,13 +272,13 @@ function createAttributeRow(attr, value) {
   return row;
 }
 
-window.resetCaseAttributes = function resetCaseAttributes() {
+export function resetCaseAttributes() {
   Object.keys(caseAttributes).forEach((key) => delete caseAttributes[key]);
   seenAttributeRows.clear();
   updateAttributeHUD();
-};
+}
 
-window.applyEffects = function applyEffects(effects) {
+export function applyEffects(effects) {
   if (!effects) return;
   Object.entries(effects).forEach(([attr, delta]) => {
     if (caseAttributes[attr] === undefined) {
@@ -292,13 +287,13 @@ window.applyEffects = function applyEffects(effects) {
     caseAttributes[attr] = Math.max(0, Math.min(100, caseAttributes[attr] + delta));
   });
   updateAttributeHUD();
-};
+}
 
-window.getCaseAttributes = function getCaseAttributes() {
+export function getCaseAttributes() {
   return { ...caseAttributes };
-};
+}
 
-window.updateAttributeHUD = function updateAttributeHUD() {
+export function updateAttributeHUD() {
   const hud = document.getElementById('attribute-hud');
   const rowsContainer = getAttributeRowsContainer();
   const entries = Object.entries(caseAttributes).sort((a, b) => Object.keys(ATTRIBUTE_CONFIG).indexOf(a[0]) - Object.keys(ATTRIBUTE_CONFIG).indexOf(b[0]));
@@ -332,7 +327,7 @@ window.updateAttributeHUD = function updateAttributeHUD() {
       row.remove();
     }
   });
-};
+}
 
 function getDeltaColor(attr, delta) {
   if (attr === 'REAL_CONNECTION' || attr === 'STABILITY') {
@@ -351,7 +346,7 @@ function hideImpactPopup() {
   }, 220);
 }
 
-window.showImpactPopup = function showImpactPopup(choice, onDismiss) {
+export function showImpactPopup(choice, onDismiss) {
   const popup = document.getElementById('impact-popup');
   const consequence = document.getElementById('impact-consequence');
   const interpretation = document.getElementById('impact-interpretation');
@@ -373,7 +368,7 @@ window.showImpactPopup = function showImpactPopup(choice, onDismiss) {
     impactCleanup = null;
   }
 
-  window.applyEffects(choice.effects);
+  applyEffects(choice.effects);
 
   const narrative = buildEffectNarrative(choice.effects);
   consequence.textContent = choice.consequence || 'Choice logged. Outcome delta recorded.';
@@ -445,7 +440,9 @@ window.showImpactPopup = function showImpactPopup(choice, onDismiss) {
   continueButton.addEventListener('click', dismiss);
   impactCleanup = () => continueButton.removeEventListener('click', dismiss);
   impactDismissTimer = window.setTimeout(dismiss, 4400);
-};
+}
 
-enrichChoiceData();
-window.addEventListener('DOMContentLoaded', updateAttributeHUD);
+export function initImpactSystem() {
+  enrichChoiceData();
+  updateAttributeHUD();
+}

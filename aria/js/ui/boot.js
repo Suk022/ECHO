@@ -1,3 +1,5 @@
+import { playUiSound } from './sfx.js';
+
 const BOOT_SESSION_KEY = 'echo:hasSeenBootScreen';
 const BOOT_DECLINE_DELAY_MS = 1600;
 const BOOT_BODY_DELAY_MS = 1400;
@@ -5,7 +7,7 @@ const BOOT_WARNING_DELAY_MS = 1100;
 const BOOT_NOTICE_DELAY_MS = 450;
 const BOOT_ACTIONS_DELAY_MS = 900;
 
-(function initBootScreen() {
+export function initBootScreen() {
   const bootScreen = document.getElementById('boot-screen');
   const proceedButton = document.getElementById('boot-proceed');
   const declineButton = document.getElementById('boot-decline');
@@ -67,7 +69,7 @@ const BOOT_ACTIONS_DELAY_MS = 900;
   function handleDecline() {
     if (isClosing) return;
 
-    window.playUiSound?.('cancel');
+    playUiSound('cancel');
     status.textContent = 'System requires participation.';
     status.classList.add('is-visible');
     bootScreen.classList.add('stage-status');
@@ -83,7 +85,7 @@ const BOOT_ACTIONS_DELAY_MS = 900;
     if (isClosing) return;
     isClosing = true;
 
-    window.playUiSound?.('enter');
+    playUiSound('enter');
     sessionStorage.setItem(BOOT_SESSION_KEY, 'true');
     bootScreen.classList.add('is-exiting');
     document.removeEventListener('keydown', handleBootKeydown);
@@ -102,4 +104,4 @@ const BOOT_ACTIONS_DELAY_MS = 900;
       completeBootScreen();
     }
   }
-})();
+}

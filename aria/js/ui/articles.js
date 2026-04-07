@@ -1,23 +1,29 @@
-// Article Preview System (UPDATED UI + UX)
+import { CONFIG } from '../data/config.js';
+
 const ARTICLES_API = `${CONFIG.BACKEND_URL}/articles`;
 let articlesCache = null;
 let fetchInProgress = false;
-const articleButton = document.getElementById('article-btn');
-const articleModal = document.getElementById('article-modal');
+let articleButton;
+let articleModal;
 
-// Button & Modal controls
-articleButton.addEventListener('click', openArticleModal);
-document.getElementById('article-modal-close').addEventListener('click', closeArticleModal);
+export function initArticles() {
+  articleButton = document.getElementById('article-btn');
+  articleModal = document.getElementById('article-modal');
+  const closeButton = document.getElementById('article-modal-close');
 
-// Close on backdrop click
-articleModal.addEventListener('click', (e) => {
-  if (e.target === articleModal) closeArticleModal();
-});
+  if (!articleButton || !articleModal || !closeButton) return;
 
-// Close on Escape key
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') closeArticleModal();
-});
+  articleButton.addEventListener('click', openArticleModal);
+  closeButton.addEventListener('click', closeArticleModal);
+
+  articleModal.addEventListener('click', (e) => {
+    if (e.target === articleModal) closeArticleModal();
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeArticleModal();
+  });
+}
 
 function openArticleModal() {
   articleModal.classList.add('open');
@@ -34,13 +40,13 @@ function closeArticleModal() {
   document.body.style.overflow = '';
 }
 
-window.setArticleButtonVisible = function setArticleButtonVisible(visible) {
+export function setArticleButtonVisible(visible) {
   if (!articleButton) return;
   articleButton.style.display = visible ? 'flex' : 'none';
   if (!visible) {
     closeArticleModal();
   }
-};
+}
 
 async function loadArticles() {
   fetchInProgress = true;
@@ -161,6 +167,8 @@ function renderArticles(articles) {
       </section>
     ` : ''}
   `;
+
+  attachArticleImageFallbacks(grid);
 }
 
 function buildFeaturedArticle(article) {
@@ -230,7 +238,8 @@ function buildImage(article, imageClass, placeholderClass, placeholderLabel) {
         src="${escapeAttr(article.image)}"
         alt="${escapeAttr(article.title)}"
         loading="lazy"
-        onerror="this.parentElement.replaceWith(createArticleFallback('${placeholderClass}', '${escapeJsString(placeholderLabel)}'))"
+        data-fallback-class="${placeholderClass}"
+        data-fallback-label="${escapeAttr(placeholderLabel)}"
       />
     </div>
   `;
@@ -241,6 +250,16 @@ function createArticleFallback(className, label) {
   element.className = className;
   element.textContent = label;
   return element;
+}
+
+function attachArticleImageFallbacks(root) {
+  root.querySelectorAll('img[data-fallback-class]').forEach((image) => {
+    image.addEventListener('error', () => {
+      const frame = image.parentElement;
+      if (!frame) return;
+      frame.replaceWith(createArticleFallback(image.dataset.fallbackClass, image.dataset.fallbackLabel || 'NO IMAGE'));
+    }, { once: true });
+  });
 }
 
 function buildMeta(article, label) {
@@ -284,9 +303,3 @@ function escapeAttr(str) {
     .replace(/>/g, '&gt;');
 }
 
-function escapeJsString(str) {
-  if (!str) return '';
-  return String(str)
-    .replace(/\\/g, '\\\\')
-    .replace(/'/g, "\\'");
-}

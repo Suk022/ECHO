@@ -1,0 +1,22 @@
+<div id="ending-screen" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:200; flex-direction:column; align-items:center; justify-content:center; gap:24px; padding:40px; text-align:center;">
+  <div id="ending-layout" style="display:grid; grid-template-columns:minmax(0, 1.2fr) minmax(320px, 0.92fr); gap:32px; align-items:start; width:min(1080px, 100%); text-align:left;">
+    <div id="ending-main">
+      <div id="ending-title" style="font-family:'Playfair Display'; font-size:32px; color:#e8d5b7;"></div>
+      <div id="ending-text" style="font-family:Lora; font-size:17px; color:rgba(255,255,255,0.75); max-width:560px; line-height:1.9;"></div>
+      <div id="ending-divider" style="width:100%; max-width:560px; height:1px; margin:18px 0; background:linear-gradient(90deg, rgba(0,229,160,0.24), rgba(255,255,255,0.06));"></div>
+      <div id="ending-echo-log" style="font-family:'Share Tech Mono'; font-size:14px; color:rgba(0,229,160,0.6); max-width:560px; line-height:1.8; border:1px solid rgba(0,229,160,0.2); padding:16px; margin-top:8px;"></div>
+    </div>
+    <aside id="ending-branch-panel" style="border:1px solid rgba(255,255,255,0.08); background:rgba(255,255,255,0.02); padding:20px 18px;">
+      <div id="ending-branch-kicker" style="font-family:'Share Tech Mono'; font-size:10px; letter-spacing:2px; color:rgba(0,229,160,0.58); margin-bottom:16px;">SUBJECT TRAJECTORY</div>
+      <div id="ending-branch-track">
+        <div id="ending-branch-start"></div>
+        <div id="ending-branch-shifts"></div>
+        <div id="ending-branch-end"></div>
+      </div>
+    </aside>
+  </div>
+  <div style="display:flex; gap:16px; margin-top:8px;">
+    <button id="ending-back-btn" type="button" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px;">CASE FILES</button>
+    <button id="next-case-btn" type="button" style="font-family:'Share Tech Mono'; font-size:12px; padding:12px 24px; background:transparent; border:1px solid rgba(0,229,160,0.4); color:#00e5a0; cursor:pointer; letter-spacing:2px;">NEXT CASE -></button>
+  </div>
+</div>

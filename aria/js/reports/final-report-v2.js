@@ -1,3 +1,17 @@
+import { ALL_STORIES } from '../data/stories/index.js';
+import { getStoryProgress } from '../core/state.js';
+import { getCaseAttributes, updateAttributeHUD } from '../core/impact-system.js';
+import {
+  addAfterTriggerEndingHook,
+  addAfterBackToSelectHook,
+  setShowMirrorEndingOverride,
+  showMirrorEnding,
+  backToSelect,
+} from '../core/endings.js';
+import { buildStorySelect } from '../core/registry.js';
+import { setArticleButtonVisible } from '../ui/articles.js';
+import { setMessageButtonVisible } from '../ui/message-modal.js';
+
 const FINAL_REPORT_V2_POSITIVE = new Set(['stabilized', 'recovered', 'processed', 'grounded', 'reached', 'saved']);
 const FINAL_REPORT_V2_CRITICAL = new Set(['gone', 'lost']);
 
@@ -32,12 +46,12 @@ let finalReportV2Timer = null;
 
 function setFinalReportOpenStateV2(isOpen) {
   document.body.classList.toggle('final-report-open', isOpen);
-  window.setArticleButtonVisible?.(!isOpen);
-  window.setMessageButtonVisible?.(!isOpen);
+  setArticleButtonVisible(!isOpen);
+  setMessageButtonVisible(!isOpen);
 }
 
 function finalReportV2Unlocked() {
-  return Object.keys(storyProgress).length >= 5;
+  return Object.keys(getStoryProgress()).length >= 5;
 }
 
 function clampPercentV2(value) {
@@ -86,7 +100,7 @@ function getCaseDynamicLine(storyId, endingKey, attributes) {
   return 'The case remained functionally stable while system influence deepened beneath the appearance of normalcy.';
 }
 
-function updateStorySelectUnlockStateV2() {
+export function updateStorySelectUnlockStateV2() {
   const footer = document.getElementById('story-select-footer');
   if (!footer) return;
 
@@ -94,23 +108,15 @@ function updateStorySelectUnlockStateV2() {
     footer.textContent = 'Final Report unlocked. Open complete review.';
     footer.classList.add('story-select-footer-unlocked');
     footer.tabIndex = 0;
-    footer.onclick = () => showMirrorEnding();
-    footer.onkeydown = (event) => {
-      if (event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        showMirrorEnding();
-      }
-    };
   } else {
     footer.textContent = 'Complete all 5 case files to unlock the Final Report';
     footer.classList.remove('story-select-footer-unlocked');
     footer.tabIndex = -1;
-    footer.onclick = null;
-    footer.onkeydown = null;
   }
 }
 
 function buildFinalReportDataV2() {
+  const storyProgress = getStoryProgress();
   const completedStories = ALL_STORIES
     .map((story) => {
       const endingKey = storyProgress[story.id];
@@ -250,51 +256,55 @@ function renderFinalReportV2() {
   });
 }
 
-const originalTriggerEndingV2 = triggerEnding;
-triggerEnding = function triggerEndingV2(endingKey) {
-  const storyId = currentStory?.id;
-  const attributes = window.getCaseAttributes?.() || {};
-
-  originalTriggerEndingV2(endingKey);
-
-  if (storyId) {
-    caseOutcomeSnapshotsV2[storyId] = {
-      endingKey,
-      attributes: { ...attributes }
-    };
-  }
-
-  const nextCaseButton = document.getElementById('next-case-btn');
-  if (nextCaseButton && finalReportV2Unlocked()) {
-    nextCaseButton.style.display = 'inline-flex';
-    nextCaseButton.textContent = 'VIEW FINAL REPORT';
-    nextCaseButton.onclick = showMirrorEnding;
-  }
-
-  updateStorySelectUnlockStateV2();
-};
-
-const originalBackToSelectV2 = backToSelect;
-backToSelect = function backToSelectV2() {
-  setFinalReportOpenStateV2(false);
-  originalBackToSelectV2();
-  const mirrorEnding = document.getElementById('mirror-ending');
-  if (mirrorEnding) {
-    mirrorEnding.classList.remove('mirror-visible');
-    mirrorEnding.style.display = 'none';
-  }
-  buildStorySelect?.();
-  updateStorySelectUnlockStateV2();
-};
-
-showMirrorEnding = function showMirrorEndingV2() {
+function openFinalReport() {
   document.getElementById('ending-screen').style.display = 'none';
   const mirrorEnding = document.getElementById('mirror-ending');
   renderFinalReportV2();
   setFinalReportOpenStateV2(true);
   mirrorEnding.style.display = 'flex';
-  window.updateAttributeHUD?.();
+  updateAttributeHUD();
   requestAnimationFrame(() => mirrorEnding.classList.add('mirror-visible'));
-};
+}
 
-window.addEventListener('DOMContentLoaded', updateStorySelectUnlockStateV2);
+export function initFinalReportV2() {
+  addAfterTriggerEndingHook((endingKey, attributes, currentStory) => {
+    if (currentStory?.id) {
+      caseOutcomeSnapshotsV2[currentStory.id] = {
+        endingKey,
+        attributes: { ...attributes },
+      };
+    }
+
+    const nextCaseButton = document.getElementById('next-case-btn');
+    if (nextCaseButton && finalReportV2Unlocked()) {
+      nextCaseButton.style.display = 'inline-flex';
+      nextCaseButton.textContent = 'VIEW FINAL REPORT';
+      nextCaseButton.onclick = () => showMirrorEnding();
+    }
+
+    updateStorySelectUnlockStateV2();
+  });
+
+  addAfterBackToSelectHook(() => {
+    setFinalReportOpenStateV2(false);
+    const mirrorEnding = document.getElementById('mirror-ending');
+    if (mirrorEnding) {
+      mirrorEnding.classList.remove('mirror-visible');
+      mirrorEnding.style.display = 'none';
+    }
+    buildStorySelect();
+    updateStorySelectUnlockStateV2();
+  });
+
+  setShowMirrorEndingOverride(openFinalReport);
+
+  document.getElementById('mirror-close')?.addEventListener('click', () => {
+    backToSelect();
+  });
+
+  document.getElementById('restart-btn')?.addEventListener('click', () => {
+    window.location.reload();
+  });
+
+  updateStorySelectUnlockStateV2();
+}
