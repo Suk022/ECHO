@@ -16,6 +16,7 @@ import {
 import { buildStorySelect } from '../core/registry.js';
 import { setArticleButtonVisible } from '../ui/articles.js';
 import { setMessageButtonVisible } from '../ui/message-modal.js';
+import { setResetButtonVisible } from '../ui/reset-state.js';
 
 const FINAL_REPORT_V2_POSITIVE = new Set(['stabilized', 'recovered', 'processed', 'grounded', 'reached', 'saved']);
 const FINAL_REPORT_V2_CRITICAL = new Set(['gone', 'lost']);
@@ -52,6 +53,7 @@ function setFinalReportOpenStateV2(isOpen) {
   document.body.classList.toggle('final-report-open', isOpen);
   setArticleButtonVisible(!isOpen);
   setMessageButtonVisible(!isOpen);
+  setResetButtonVisible(!isOpen);
 }
 
 function finalReportV2Unlocked() {

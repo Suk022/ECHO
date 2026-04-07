@@ -943,7 +943,8 @@ body.boot-active {
 }
 
 body.final-report-open #article-btn,
-body.final-report-open #message-btn {
+body.final-report-open #message-btn,
+body.final-report-open #reset-state-wrap {
   display: none !important;
 }
 
