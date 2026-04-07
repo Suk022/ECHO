@@ -12,7 +12,7 @@ from articles import router as articles_router
 
 app = FastAPI(
     title="ECHO Article Preview API",
-    description="Resolves shortened URLs and extracts OG metadata for article preview cards.",
+    description="A backend service for extracting and serving article metadata.",
     version="1.0.0",
 )
 
