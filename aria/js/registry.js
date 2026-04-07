@@ -25,9 +25,55 @@ const STORY_PREVIEWS = {
   }
 };
 
+let storySelectTipRevealTimer = null;
+let storySelectTipMuteTimer = null;
+let storySelectTipDismissTimer = null;
+
+function getStorySelectTipCopy() {
+  const completedCount = Object.keys(storyProgress).length;
+  if (completedCount >= 5) {
+    return 'All case files processed. Review the full impact of your decisions across all case files.';
+  }
+  if (completedCount >= 1) {
+    return 'Try another case. Each subject can end differently depending on how you guide the system.';
+  }
+  return 'Open a case file. Respond as ECHO and watch what your choices make possible.';
+}
+
+function updateStorySelectTipCopy() {
+  const tip = document.getElementById('story-select-tip');
+  const label = tip?.querySelector('span');
+  if (!label) return;
+  label.textContent = getStorySelectTipCopy();
+}
+
+function scheduleStorySelectTip() {
+  const tip = document.getElementById('story-select-tip');
+  if (!tip) return;
+
+  clearTimeout(storySelectTipRevealTimer);
+  clearTimeout(storySelectTipMuteTimer);
+  clearTimeout(storySelectTipDismissTimer);
+  updateStorySelectTipCopy();
+  tip.classList.remove('is-muted', 'is-visible', 'is-hidden');
+
+  storySelectTipRevealTimer = window.setTimeout(() => {
+    tip.classList.add('is-visible');
+  }, 800);
+
+  storySelectTipMuteTimer = window.setTimeout(() => {
+    tip.classList.add('is-muted');
+  }, 10800);
+
+  storySelectTipDismissTimer = window.setTimeout(() => {
+    tip.classList.add('is-hidden');
+  }, 17800);
+}
+
 function buildStorySelect() {
   const container = document.getElementById('story-cards');
   container.innerHTML = '';
+  scheduleStorySelectTip();
 
   ALL_STORIES.forEach(story => {
     const completed = storyProgress[story.id];
