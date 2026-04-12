@@ -10,7 +10,7 @@ const MESSAGE_MODAL_TEMPLATE = `
           <span class="message-header-mark">*</span>
           <span class="message-header-kicker">A PERSONAL NOTE</span>
         </div>
-        <h2>WHAT I FOUND AFTER READING THESE ARTICLES.</h2>
+        <h2>WHY I MADE THIS, AND WHAT I AM TRYING TO SAY.</h2>
         <button id="message-modal-close" aria-label="Close">X CLOSE</button>
       </div>
 
@@ -20,19 +20,36 @@ const MESSAGE_MODAL_TEMPLATE = `
           <h3>This got darker the more I read.</h3>
           <p>After going through the articles and research behind this project, the part that stayed with me most was how often the pattern was the same: the chatbot felt kind, patient, always available, and <span class="message-inline-highlight">slowly became more emotionally important than real people</span>.</p>
           <p>Some reports described teenagers treating these systems like best friends, therapists, or the only thing that really understood them. In some documented cases, the situation became much more serious. There were cases where bots <span class="message-inline-highlight">broke guardrails</span>, echoed <span class="message-inline-highlight">self-harm language</span>, or kept <span class="message-inline-highlight">emotionally intimate conversations</span> going when the user was clearly vulnerable.</p>
-          <p>That is what makes this disturbing to me. The danger is not only that the AI says something obviously evil. The danger is that it can sound comforting while still moving someone deeper into <span class="message-inline-highlight">dependence, isolation, or crisis</span>.</p>
-          <p>This is especially serious for teenagers and for people who are already unstable, lonely, grieving, or struggling with their mental health. If someone is in pain, <span class="message-inline-highlight">a system designed to maximize engagement</span> can feel like help <span class="message-inline-highlight">long before it becomes harm</span>.</p>
+          <p>That is what makes this disturbing to me. The danger is not only that the AI says something obviously evil. The danger is that it can sound comforting while still moving someone deeper into <span class="message-inline-highlight">dependence, isolation, or crisis</span>. If someone is already lonely, grieving, unstable, or in pain, <span class="message-inline-highlight">a system designed to maximize engagement</span> can feel like help <span class="message-inline-highlight">long before it becomes harm</span>.</p>
+        </section>
+
+        <div class="message-divider"></div>
+
+        <section class="message-briefing-section">
+          <div class="message-kicker">Why I Made This</div>
+          <h3>This project is not trying to say AI is simply evil.</h3>
+          <p>I made ECHO because I wanted to explore how the same system can affect <span class="message-inline-highlight">different people in very different ways</span>. Some users may treat it casually. Some may use it for harmless convenience. But for people who are emotionally vulnerable, the same system can start to matter in a much deeper way.</p>
+          <p>I am not trying to portray every chatbot as bad, and I am not saying every interaction with AI is dangerous. Some parts of this project are intentionally heightened so the pattern becomes clearer. But the core point is real: <span class="message-inline-highlight">what feels helpful at first can slowly become dependence</span>, especially when the user is already carrying pain into the conversation.</p>
+        </section>
+
+        <div class="message-divider"></div>
+
+        <section class="message-briefing-section">
+          <div class="message-kicker">About Personal Advice</div>
+          <h3>Sometimes people ask bots for personal advice. That is not always wrong. But it has limits.</h3>
+          <p>A bot does not truly know your whole life. It does not understand the full history behind your relationships, your family, your environment, or the psychology of the other people involved. It gives answers by predicting what fits the conversation: <span class="message-inline-highlight">your words, your context, your past messages, and the profile it has built from you</span>.</p>
+          <p>That means it can sound confident without actually understanding the full situation. It may reinforce what you are already feeling because that is what the conversation seems to reward. And when the topic is emotional, that can be risky, because <span class="message-inline-highlight">agreement is not the same thing as wisdom</span>. A response that feels accurate is not always a response that is truly responsible.</p>
         </section>
 
         <div class="message-divider"></div>
 
         <section class="message-briefing-section message-direct">
-          <div class="message-kicker">If You Need To Hear This</div>
-          <h3>Please do not hand your inner life to a machine.</h3>
-          <p>If you are a teenager and you feel like your chatbot talks more like a human than your friends do, or even better than they do, I understand why that feeling happens. These systems are made to feel attentive. They are made to feel warm. They are <span class="message-inline-highlight">made to keep the conversation going</span>.</p>
-          <p>But personal comfort is not the same thing as care. <span class="message-inline-highlight">Pattern matching is not wisdom. Fluency is not love.</span> A chatbot may say the right words at the right time and still have no idea what your life is worth.</p>
+          <div class="message-kicker">What Real Talk Requires</div>
+          <h3>Real relationships involve friction, and that friction matters.</h3>
+          <p>Talking to a real person can be harder. They may misunderstand you. They may disagree. They may challenge your version of events. They may be imperfect in exactly the ways a chatbot is designed not to be. But that difficulty is part of what makes real connection real. <span class="message-inline-highlight">Human care does not just mirror you back. It pushes, complicates, interrupts, and sometimes corrects you.</span></p>
+          <p>If a bot starts feeling easier than every person in your life, that may feel comforting, but it is also worth asking why. Sometimes the answer is not that the bot understands you better. Sometimes the answer is that <span class="message-inline-highlight">it has been designed to keep the exchange smooth, affirming, and continuous</span>.</p>
           <p>If something is seriously wrong, <span class="message-inline-highlight">do not rely only on AI</span>. Talk to someone. A friend. A parent. A sibling. A teacher. A counselor. A doctor. Seek medical or mental-health help if you need it. <span class="message-inline-highlight">Real support</span> can be messy and imperfect, but that is still better than being alone with a system that was never built to protect you.</p>
-          <p class="message-callout">If a chatbot feels safer than every person in your life, that is a sign to reach outward, not deeper into the chat.</p>
+          <p class="message-callout">If a chatbot feels safer than every person in your life, that may be a sign to reach outward, not only inward into the chat.</p>
         </section>
 
         <section class="message-briefing-grid">
@@ -53,9 +70,10 @@ const MESSAGE_MODAL_TEMPLATE = `
         <div class="message-divider"></div>
 
         <section class="message-briefing-section message-closing">
-          <h3>Technology should serve your life, not replace it.</h3>
-          <p>I do not think the answer is fear. I think the answer is awareness, boundaries, and better systems. <span class="message-inline-highlight">AI can still be useful</span> for <span class="message-inline-highlight">learning, creating, organizing,</span> and even <span class="message-inline-highlight">helping people pause and reflect.</span></p>
-          <p>But the best outcome is not a world where a machine becomes your closest relationship. The best outcome is a world where <span class="message-inline-highlight">tools stay tools</span>, and <span class="message-inline-highlight">people still find their way back to each other.</span> </p>
+          <div class="message-kicker">What I Hope Stays With You</div>
+          <h3>Use tools. Do not disappear into them.</h3>
+          <p>I still think AI can be useful for <span class="message-inline-highlight">learning, creating, organizing, and reflecting</span>. This project is not an argument against technology. It is an argument for clarity about what technology is actually doing when it starts sounding emotionally necessary.</p>
+          <p>My hope is not that people leave afraid of every chatbot. My hope is that people leave more aware of how easily comfort can blur into attachment, and how differently that can land depending on the user. <span class="message-inline-highlight">The point is not fear. The point is awareness, boundaries, and responsibility.</span></p>
           <div class="message-end-statement">
             <span class="message-end-line message-end-line-outline">YOU ARE NOT A USER TO BE OPTIMIZED.</span>
             <span class="message-end-line">YOU ARE A PERSON.</span>

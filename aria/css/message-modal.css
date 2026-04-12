@@ -192,9 +192,9 @@
   font-size: 18px;
   color: #e8d5b7;
   line-height: 1.8;
-  border-left: 3px solid #d4ff00;
+  border-left: 2px solid #c1db3c;
   padding-left: 20px;
-  margin: 24px 0 0;
+  margin: 24px 0 0; 
 }
 
 .message-inline-highlight {
